@@ -10,6 +10,8 @@
         "jest": true
     },
     "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 6,
         "ecmaFeatures": {
             "arrowFunctions": true,
             "blockBindings": true,
@@ -26,7 +28,7 @@
             "restParams": true,
             "spread": true,
             "superInFunctions": true,
-            "templateStrings": true,
+            "templateStrings": true
         }
     },
     "rules": {
