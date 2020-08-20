@@ -1,11 +1,12 @@
-import app from './app'
+import app from './app';
 
-const port = parseInt(process.env.PORT) || 3000
+const port = parseInt(process.env.PORT || '3000');
 
-const server = new app().Start(port)
-  .then((port: number) => console.log(`Server running on port ${port}`))
-  .catch((error: any) => {     
-    console.log(error)
+const server = new app()
+  .Start(port)
+  .then((runningPort: number) => console.log(`Server running on port ${runningPort}`))
+  .catch((error: any) => {
+    console.log(error);
     process.exit(1);
   });
 

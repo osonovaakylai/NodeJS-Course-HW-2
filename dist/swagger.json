@@ -17,12 +17,8 @@
             "description": "A simple REST service withCRUD operations for User entity"
         }
     ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
     "paths": {
         "/users/{id}": {
             "parameters": [
@@ -35,9 +31,7 @@
                 }
             ],
             "get": {
-                "tags": [
-                    "User"
-                ],
+                "tags": ["User"],
                 "summary": "Get user with given ID",
                 "parameters": [
                     {
@@ -64,9 +58,7 @@
             },
             "put": {
                 "summary": "Update user with given ID",
-                "tags": [
-                    "User"
-                ],
+                "tags": ["User"],
                 "requestBody": {
                     "description": "User Object",
                     "required": true,
@@ -106,9 +98,7 @@
             },
             "delete": {
                 "summary": "Delete user with given ID",
-                "tags": [
-                    "User"
-                ],
+                "tags": ["User"],
                 "parameters": [
                     {
                         "in": "path",

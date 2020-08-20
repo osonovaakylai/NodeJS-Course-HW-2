@@ -25,18 +25,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const uuid_1 = require("uuid");
 const cors_1 = __importDefault(require("cors"));
+const Joi = __importStar(require("@hapi/joi"));
+const express_joi_validation_1 = require("express-joi-validation");
 class Router {
     constructor(server) {
         const router = express.Router();
+        const validator = express_joi_validation_1.createValidator();
+        const bodySchema = Joi.object({
+            login: Joi.string().required(),
+            password: Joi.string()
+                .pattern(new RegExp("^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$"))
+                .required(),
+            age: Joi.number().integer().min(4).max(130).required(),
+            isDeleted: Joi.boolean().required(),
+        });
         const users = new Map();
-        users[uuid_1.v4()] = { login: 'anna', password: "anna1234", age: 22, isDeleted: false };
-        users[uuid_1.v4()] = { login: 'olesya', password: "olesya234", age: 18, isDeleted: false };
-        users[uuid_1.v4()] = { login: 'dmitriy', password: "dmitriy1234", age: 42, isDeleted: false };
+        users[uuid_1.v4()] = {
+            login: 'anna',
+            password: 'anna1234',
+            age: 22,
+            isDeleted: false,
+        };
+        users[uuid_1.v4()] = {
+            login: 'olesya',
+            password: 'olesya234',
+            age: 18,
+            isDeleted: false,
+        };
+        users[uuid_1.v4()] = {
+            login: 'dmitriy',
+            password: 'dmitriy1234',
+            age: 42,
+            isDeleted: false,
+        };
         router.get('/', (req, res) => {
             res.json({
-                message: 'API works'
+                message: 'API works',
             });
         });
+        // get autosuggested filtered users
         router.get('/users', cors_1.default(), (req, res) => {
             const { loginSubstring, limit } = req.query;
             let filteredObj = {};
@@ -44,7 +71,7 @@ class Router {
             if (req.query && limit && loginSubstring) {
                 filteredObj = Object.keys(users).reduce((accumulator, key) => {
                     const isLoginContainsSubstring = users[key].login.includes(loginSubstring);
-                    const isExceedsLimit = counter === parseInt(limit);
+                    const isExceedsLimit = counter === Number(limit);
                     if (isLoginContainsSubstring && !isExceedsLimit) {
                         accumulator[key] = users[key];
                         counter++;
@@ -53,52 +80,56 @@ class Router {
                 }, {});
             }
             res.json({
-                users: filteredObj
+                users: filteredObj,
             });
-        });
-        //create new user
-        router.post('/users', cors_1.default(), (req, res) => {
-            try {
-                let user = {};
-                Object.assign(user, req.body);
-                const newUUID = uuid_1.v4();
-                users[newUUID] = user;
-                res.json({
-                    user: users[newUUID]
-                });
-            }
-            catch (e) {
-                res.status(400).send(JSON.stringify({ "error": "problem with posted data" }));
-            }
         });
         //get user by id
         router.get('/users/:id', cors_1.default(), (req, res) => {
             if (!!users[req.params.id]) {
                 res.json({
-                    user: users[req.params.id]
+                    user: users[req.params.id],
                 });
             }
             else {
-                res.status(404).send(JSON.stringify({ "error": "no such user" }));
+                res.status(404).send(JSON.stringify({ error: 'no such user' }));
+            }
+        });
+        // create new user
+        router.post('/users', cors_1.default(), validator.body(bodySchema), (req, res) => {
+            try {
+                const user = {};
+                Object.assign(user, req.body);
+                const newUUID = uuid_1.v4();
+                users[newUUID] = user;
+                res.json({
+                    user: users[newUUID],
+                });
+            }
+            catch (e) {
+                res
+                    .status(400)
+                    .send(JSON.stringify({ error: 'problem with posted data' }));
             }
         });
         //update user
-        router.put('/users/:id', cors_1.default(), (req, res) => {
+        router.put('/users/:id', cors_1.default(), validator.body(bodySchema), (req, res) => {
             try {
                 if (!!users[req.params.id]) {
-                    let user = {};
+                    const user = {};
                     Object.assign(user, req.body);
                     users[req.params.id] = user;
                     res.json({
-                        user: users[req.params.id]
+                        user: users[req.params.id],
                     });
                 }
                 else {
-                    res.status(404).send(JSON.stringify({ "error": "no such user" }));
+                    res.status(404).send(JSON.stringify({ error: 'no such user' }));
                 }
             }
             catch (e) {
-                res.status(400).send(JSON.stringify({ "error": "problem with posted data" }));
+                res
+                    .status(400)
+                    .send(JSON.stringify({ error: 'problem with posted data' }));
             }
         });
         //delete user softly
@@ -108,11 +139,11 @@ class Router {
                 const user = Object.assign(Object.assign({}, userToDelete), { isDeleted: true });
                 users[req.params.id] = user;
                 res.json({
-                    user: user
+                    user: user,
                 });
             }
             else {
-                res.status(404).send(JSON.stringify({ "error": "no such user" }));
+                res.status(404).send(JSON.stringify({ error: 'no such user' }));
             }
         });
         router.options('*', cors_1.default());

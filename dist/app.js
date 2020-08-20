@@ -31,7 +31,8 @@ class App {
     constructor() {
         this.Start = (port) => {
             return new Promise((resolve, reject) => {
-                this.httpServer.listen(port, () => {
+                this.httpServer
+                    .listen(port, () => {
                     resolve(port);
                 })
                     .on('error', (err) => reject(err));
