@@ -59,6 +59,17 @@
             "post": {
                 "tags": ["Users"],
                 "summary": "Create new User",
+                "requestBody": {
+                    "description": "User Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/UserInRequestBody"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -201,6 +212,23 @@
                 "uuid": {
                     "type": "string"
                 },
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "age": {
+                    "type": "number"
+                },
+                "isDeleted": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "UserInRequestBody": {
+            "type": "object",
+            "properties": {
                 "login": {
                     "type": "string"
                 },
