@@ -78,11 +78,9 @@ class Router {
             }
             return accumulator;
           }, {});
-
           res.json({
             users: filteredObj
           });
-          
         } else {
           res.status(400).send(JSON.stringify({ error: 'Bad request' }));
         }
