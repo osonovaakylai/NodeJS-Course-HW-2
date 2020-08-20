@@ -15,11 +15,63 @@
         {
             "name": "User",
             "description": "A simple REST service withCRUD operations for User entity"
+        },
+        {
+            "name": "Users",
+            "description": "Operations with list of users"
         }
     ],
     "consumes": ["application/json"],
     "produces": ["application/json"],
     "paths": {
+        "/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get auto suggested filtered list of users",
+                "parameters": [
+                    {
+                        "name": "loginSubstring",
+                        "in": "path",
+                        "required": true,
+                        "description": "Login substring that we want to match to the login of users",
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "required": true,
+                        "description": "The maximum number of the users that we want to get",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Params"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad request"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Users"],
+                "summary": "Create new User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad request"
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "parameters": [
                 {
@@ -128,6 +180,17 @@
         "id": {
             "properties": {
                 "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "Params": {
+            "type": "object",
+            "properties": {
+                "loginSubstring": {
+                    "type": "string"
+                },
+                "limit": {
                     "type": "string"
                 }
             }

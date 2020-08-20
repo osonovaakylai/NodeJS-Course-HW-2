@@ -34,36 +34,35 @@ class Router {
         const bodySchema = Joi.object({
             login: Joi.string().required(),
             password: Joi.string()
-                .pattern(new RegExp("^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$"))
+                .pattern(new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$'))
                 .required(),
             age: Joi.number().integer().min(4).max(130).required(),
-            isDeleted: Joi.boolean().required(),
+            isDeleted: Joi.boolean().required()
         });
         const users = new Map();
         users[uuid_1.v4()] = {
             login: 'anna',
             password: 'anna1234',
             age: 22,
-            isDeleted: false,
+            isDeleted: false
         };
         users[uuid_1.v4()] = {
             login: 'olesya',
             password: 'olesya234',
             age: 18,
-            isDeleted: false,
+            isDeleted: false
         };
         users[uuid_1.v4()] = {
             login: 'dmitriy',
             password: 'dmitriy1234',
             age: 42,
-            isDeleted: false,
+            isDeleted: false
         };
         router.get('/', (req, res) => {
             res.json({
-                message: 'API works',
+                message: 'API works'
             });
         });
-        // get autosuggested filtered users
         router.get('/users', cors_1.default(), (req, res) => {
             const { loginSubstring, limit } = req.query;
             let filteredObj = {};
@@ -78,23 +77,24 @@ class Router {
                     }
                     return accumulator;
                 }, {});
+                res.json({
+                    users: filteredObj
+                });
             }
-            res.json({
-                users: filteredObj,
-            });
+            else {
+                res.status(400).send(JSON.stringify({ error: 'Bad request' }));
+            }
         });
-        //get user by id
         router.get('/users/:id', cors_1.default(), (req, res) => {
             if (!!users[req.params.id]) {
                 res.json({
-                    user: users[req.params.id],
+                    user: users[req.params.id]
                 });
             }
             else {
                 res.status(404).send(JSON.stringify({ error: 'no such user' }));
             }
         });
-        // create new user
         router.post('/users', cors_1.default(), validator.body(bodySchema), (req, res) => {
             try {
                 const user = {};
@@ -102,7 +102,7 @@ class Router {
                 const newUUID = uuid_1.v4();
                 users[newUUID] = user;
                 res.json({
-                    user: users[newUUID],
+                    user: users[newUUID]
                 });
             }
             catch (e) {
@@ -111,7 +111,6 @@ class Router {
                     .send(JSON.stringify({ error: 'problem with posted data' }));
             }
         });
-        //update user
         router.put('/users/:id', cors_1.default(), validator.body(bodySchema), (req, res) => {
             try {
                 if (!!users[req.params.id]) {
@@ -119,7 +118,7 @@ class Router {
                     Object.assign(user, req.body);
                     users[req.params.id] = user;
                     res.json({
-                        user: users[req.params.id],
+                        user: users[req.params.id]
                     });
                 }
                 else {
@@ -132,15 +131,12 @@ class Router {
                     .send(JSON.stringify({ error: 'problem with posted data' }));
             }
         });
-        //delete user softly
         router.delete('/users/:id', cors_1.default(), (req, res) => {
             const userToDelete = users[req.params.id];
             if (!!userToDelete) {
                 const user = Object.assign(Object.assign({}, userToDelete), { isDeleted: true });
                 users[req.params.id] = user;
-                res.json({
-                    user: user,
-                });
+                res.json({ user });
             }
             else {
                 res.status(404).send(JSON.stringify({ error: 'no such user' }));
