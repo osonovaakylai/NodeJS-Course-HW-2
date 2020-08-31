@@ -2,7 +2,7 @@ import * as express from "express";
 import cors from "cors";
 import { validator, bodySchema } from "../validators/user-validator";
 import {
-  getUsers,
+  getUsersByParams,
   getUserById,
   createUser,
   updateUser,
@@ -15,7 +15,7 @@ class Router {
     const router = express.Router();
 
     router.get("/", getAllUsers);
-    router.get("/users", cors(), getUsers);
+    router.get("/users", cors(), getUsersByParams);
     router.post("/user/create", cors(), validator.body(bodySchema), createUser);
     router.get("/user/:id", cors(), getUserById);
     router.put("/user/:id", cors(), validator.body(bodySchema), updateUser);

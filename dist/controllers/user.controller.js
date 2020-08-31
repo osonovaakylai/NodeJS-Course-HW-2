@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsers = exports.getAllUsers = void 0;
 const sequelize_1 = __importDefault(require("sequelize"));
 const uuid_1 = require("uuid");
-const Op = sequelize_1.default.Op;
+const sequelize_2 = require("sequelize");
 const user_1 = __importDefault(require("../models/user"));
 const users = new Map();
 users[uuid_1.v4()] = {
@@ -55,37 +55,49 @@ exports.getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { loginSubstring, limit } = req.query;
-    let filteredObj = {};
-    let counter = 0;
-    if (req.query && limit && loginSubstring) {
-        filteredObj = Object.keys(users).reduce((accumulator, key) => {
-            const isLoginContainsSubstring = users[key].login.includes(loginSubstring);
-            const isExceedsLimit = counter === Number(limit);
-            if (isLoginContainsSubstring && !isExceedsLimit) {
-                accumulator[key] = users[key];
-                counter++;
-            }
-            return accumulator;
-        }, {});
-        res.json({
-            users: filteredObj,
-        });
-    }
-    else {
-        res.status(400).json({
-            success: false,
-            message: "Bad request",
-        });
-    }
-});
-exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // let filteredObj = {};
+    // let counter = 0;
+    // if (req.query && limit && loginSubstring) {
+    //   filteredObj = Object.keys(users).reduce((accumulator, key) => {
+    //     const isLoginContainsSubstring = users[key].login.includes(
+    //       loginSubstring
+    //     );
+    //     const isExceedsLimit = counter === Number(limit);
+    //     if (isLoginContainsSubstring && !isExceedsLimit) {
+    //       accumulator[key] = users[key];
+    //       counter++;
+    //     }
+    //     return accumulator;
+    //   }, {});
+    //   res.json({
+    //     users: filteredObj,
+    //   });
+    // } else {
+    //   res.status(400).json({
+    //     success: false,
+    //     message: "Bad request",
+    //   });
+    // }
     try {
-        let user = yield user_1.default.findOne({ where: { id: `${req.params.id}` } });
-        if (user) {
+        if (req.query && limit && loginSubstring) {
+            let filteredUsers = yield user_1.default.findAll({
+                where: {
+                    login: {
+                        [sequelize_2.Op.like]: sequelize_1.default.literal(`\'%${loginSubstring}%\'`),
+                    },
+                },
+                limit: Number(limit)
+            });
             res.json({
                 success: true,
-                message: "User fetch Successfully",
-                data: user,
+                message: "Success",
+                data: filteredUsers || [],
+            });
+        }
+        else {
+            res.status(400).json({
+                success: false,
+                message: "Bad request",
             });
         }
     }
@@ -97,27 +109,43 @@ exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
+exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let user = yield user_1.default.findOne({ where: { id: `${req.params.id}` } });
+        res.json({
+            success: true,
+            message: "Success",
+            data: user || null,
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+            message: "Something went wrong!",
+        });
+    }
+});
 exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const checkdata = yield user_1.default.findOne({ where: { login: req.body.login } });
         console.log(checkdata);
         if (checkdata) {
             res.json({
-                message: "User Already Exist",
+                message: "User already exist",
                 data: checkdata,
             });
         }
         else {
             const newUUID = uuid_1.v4();
             const newUser = Object.assign({ id: newUUID }, req.body);
-            console.log(newUser);
             const createdata = yield user_1.default.create(newUser, {
                 fields: ["id", "login", "password", "age", "isDeleted"],
             });
             if (createdata) {
                 res.json({
                     success: true,
-                    message: "User Created Successfully",
+                    message: "Success",
                     data: createdata,
                 });
             }
@@ -133,27 +161,23 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let finddata = yield user_1.default.findAll({
-            where: {
-                id: req.params.id,
-            },
-        });
-        if (finddata.length > 0) {
-            finddata.forEach((data) => __awaiter(void 0, void 0, void 0, function* () {
-                yield data.update(req.body);
-            }));
+        let user = yield user_1.default.findOne({ where: { id: `${req.params.id}` } });
+        let response;
+        if (user) {
+            yield user.update(req.body);
+            response = {
+                success: true,
+                message: "Success",
+                data: user,
+            };
         }
         else {
-            return res.json({
+            response = {
                 success: false,
                 message: "No such user",
-            });
+            };
         }
-        return res.json({
-            success: true,
-            message: "User Updated Successfully",
-            data: finddata,
-        });
+        return res.json(response);
     }
     catch (err) {
         console.log(err);
@@ -173,7 +197,7 @@ exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (deletedata) {
             res.json({
                 success: true,
-                message: "User Deleted Successfully",
+                message: "Success",
             });
         }
     }

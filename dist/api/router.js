@@ -24,8 +24,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const user_controller_1 = require("../controllers/user.controller");
 const user_validator_1 = require("../validators/user-validator");
+const user_controller_1 = require("../controllers/user.controller");
 class Router {
     constructor(server) {
         const router = express.Router();
