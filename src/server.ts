@@ -1,6 +1,7 @@
-import app from './app';
+import app from './loaders/app';
+import config from './config/index'
 
-const port = parseInt(process.env.PORT || '8080');
+const port = parseInt(config.port);
 
 const server = new app()
   .Start(port)

@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Op } from 'sequelize';
 import * as express from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { IUserRequestSchema } from '../types/user';
+import { IUserRequestSchema } from '../interfaces/user';
 import User from '../models/user';
 
 export const getAllUsers = async (req: express.Request, res: express.Response): Promise<any> => {

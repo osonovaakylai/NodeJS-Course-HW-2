@@ -8,7 +8,7 @@ import {
   updateUser,
   deleteUser,
   getAllUsers
-} from '../controllers/user.controller';
+} from '../services/user';
 
 class Router {
   constructor(server: express.Express) {
