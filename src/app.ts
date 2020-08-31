@@ -1,8 +1,8 @@
-import express from "express";
-import swaggerUi from "swagger-ui-express";
-import Router from "./api/router";
-import sequelize from "./database/db";
-import * as swaggerDocument from "./swagger.json";
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import Router from './api/router';
+import sequelize from './database/db';
+import * as swaggerDocument from './swagger.json';
 
 class App {
   private httpServer: any;
@@ -16,18 +16,18 @@ class App {
     new Router(this.httpServer);
 
     this.httpServer.use(
-      "/swagger",
+      '/swagger',
       swaggerUi.serve,
       swaggerUi.setup(swaggerDocument)
     );
   }
 
-  public Start = (port: number) => {
+  public Start = (port: number): Promise<any> => {
     return new Promise((resolve, reject) => {
       this.httpServer.listen(port, () => {
           resolve(port);
         })
-        .on("error", (err: any) => reject(err));
+        .on('error', (err: any) => reject(err));
     });
   };
 }
