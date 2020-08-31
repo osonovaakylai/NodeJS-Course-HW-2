@@ -1,0 +1,1 @@
+{"version":3,"file":"dummy.js","sourceRoot":"","sources":["../../src/models/dummy.ts"],"names":[],"mappings":";;;;;AAAA,0DAAkC;AAClC,kDAA+C;AAE/C,IAAI,IAAI,GAAG,oBAAS,CAAC,MAAM,CACvB,MAAM,EACN;IACE,IAAI,EAAE,mBAAS,CAAC,IAAI;IACpB,GAAG,EAAE,mBAAS,CAAC,MAAM;CACtB,EACD;IACE,UAAU,EAAE,KAAK;IACjB,eAAe,EAAE,IAAI;CACtB,CACF,CAAC;AAEJ,kBAAe,IAAI,CAAC"}

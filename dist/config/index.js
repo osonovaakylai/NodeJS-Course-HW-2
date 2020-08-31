@@ -12,10 +12,6 @@ if (envFound.error) {
 exports.default = {
     port: process.env.PORT,
     databasePort: process.env.DB_PORT,
-    jwtSecret: process.env.JWT_SECRET,
-    logs: {
-        level: process.env.LOG_LEVEL || 'silly',
-    },
     databaseURL: process.env.DATABASE_URL
 };
 //# sourceMappingURL=index.js.map
