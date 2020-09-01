@@ -19,25 +19,25 @@ const User = sequelize.define(
   {
     id: {
       type: Sequelize.UUID,
-      primaryKey: true,
+      primaryKey: true
     },
     login: {
       type: Sequelize.STRING,
-      unique: true,
+      unique: true
     },
     password: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING
     },
     age: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER
     },
     isDeleted: {
-      type: Sequelize.BOOLEAN,
-    },
+      type: Sequelize.BOOLEAN
+    }
   },
   {
     timestamps: false,
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 
@@ -48,14 +48,14 @@ sequelize.sync({ force: true }).then(() => {
       login: 'user1',
       password: 'user1Pass',
       age: 22,
-      isDeleted: false,
+      isDeleted: false
     },
     {
       id: '3a13f65e-3d4a-45b2-967b-2a57f37413b2',
       login: 'user2',
       password: 'user2Pass',
       age: 42,
-      isDeleted: false,
+      isDeleted: false
     }
   ])
     .then(() => {
