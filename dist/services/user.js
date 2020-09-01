@@ -54,7 +54,7 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findOne({ where: { id: `${req.params.id}` } });
+        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
         res.json({
             success: true,
             message: 'Success',
@@ -92,7 +92,7 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findOne({ where: { id: `${req.params.id}` } });
+        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
         let response;
         if (user) {
             yield user.update(req.body);
