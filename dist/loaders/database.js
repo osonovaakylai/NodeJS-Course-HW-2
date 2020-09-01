@@ -55,10 +55,10 @@ exports.sequelize.sync({ force: true }).then(() => {
             isDeleted: false,
         }
     ])
-        .then(function () {
+        .then(() => {
         return User.findAll();
     })
-        .then(function (users) {
+        .then((users) => {
         console.log(users);
     });
 });
