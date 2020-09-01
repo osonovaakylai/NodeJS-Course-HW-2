@@ -102,10 +102,22 @@ export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const deleteUser = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const deletedUser = await User.destroy({ where: { id: req.params.id } });
-    if (deletedUser) {
-      res.json({ success: true, message: 'Success' });
+    const user = await User.findOne({ where: { id: req.params.id } });
+    let response: any;
+    if (user) {
+      const newUser = { ...user, isDeleted: true }
+      await user.update(newUser);
+      response = {
+        success: true,
+        message: 'Success'
+      };
+    } else {
+      response = {
+        success: false,
+        message: 'No such user'
+      };
     }
+    return res.json(response);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Something went wrong!' });
   }

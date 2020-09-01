@@ -39,7 +39,6 @@ const User = exports.sequelize.define('user', {
     freezeTableName: true,
 });
 exports.sequelize.sync({ force: true }).then(() => {
-    console.log(`Database & tables created!`);
     User.bulkCreate([
         {
             id: '3a13f65e-3d4a-45b2-967b-2a57f37413b1',

@@ -116,10 +116,23 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deletedUser = yield user_1.default.destroy({ where: { id: req.params.id } });
-        if (deletedUser) {
-            res.json({ success: true, message: 'Success' });
+        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
+        let response;
+        if (user) {
+            const newUser = Object.assign(Object.assign({}, user), { isDeleted: true });
+            yield user.update(newUser);
+            response = {
+                success: true,
+                message: 'Success'
+            };
         }
+        else {
+            response = {
+                success: false,
+                message: 'No such user'
+            };
+        }
+        return res.json(response);
     }
     catch (err) {
         res.status(500).json({ success: false, message: 'Something went wrong!' });
