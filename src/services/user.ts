@@ -42,7 +42,7 @@ export const getUsersByParams = async (req: express.Request, res: express.Respon
 
 export const getUserById = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findOne({ where: { id: `${req.params.id}` } });
+    const user = await User.findOne({ where: { id: req.params.id } });
     res.json({
       success: true,
       message: 'Success',
@@ -79,7 +79,7 @@ export const createUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findOne({ where: { id: `${req.params.id}` } });
+    const user = await User.findOne({ where: { id: req.params.id } });
     let response: any;
     if (user) {
       await user.update(req.body);
