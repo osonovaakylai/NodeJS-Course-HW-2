@@ -1,7 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import Router from '../api/router';
-import { sequelize } from '../loaders/database';
+import db from './db';
 import * as swaggerDocument from '../config/swagger.json';
 
 class App {
@@ -11,7 +11,7 @@ class App {
   constructor() {
     this.httpServer = express();
     this.httpServer.use(express.json());
-    this.db = sequelize;
+    this.db = db;
 
     new Router(this.httpServer);
 

@@ -1,31 +1,15 @@
-import Sequelize from 'sequelize';
-import { sequelize } from '../loaders/database'
+import mongoose from 'mongoose'
 
-const User = sequelize.define(
-  'user',
-  {
-    id: {
-      type: Sequelize.UUID,
-      primaryKey: true
-    },
-    login: {
-      type: Sequelize.STRING,
-      unique: true
-    },
-    password: {
-      type: Sequelize.STRING
-    },
-    age: {
-      type: Sequelize.INTEGER
-    },
-    isDeleted: {
-      type: Sequelize.BOOLEAN
-    }
-  },
-  {
-    timestamps: false,
-    freezeTableName: true
-  }
-);
+const Schema = mongoose.Schema;
+const UserSchema = new Schema({
+  id: String,
+  login: String,
+  password: String,
+  age: Number,
+  isDeleted: Boolean
+})
 
-export default User;
+mongoose.model('User', UserSchema)
+const User = mongoose.model('User')
+
+export default User

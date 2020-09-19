@@ -13,13 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsersByParams = exports.getAllUsers = void 0;
-const sequelize_1 = __importDefault(require("sequelize"));
-const uuid_1 = require("uuid");
-const sequelize_2 = require("sequelize");
 const user_1 = __importDefault(require("../models/user"));
 exports.getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield user_1.default.findAll();
+        const users = yield user_1.default.find();
         res.json({ success: true, message: 'Success', data: users || [] });
     }
     catch (err) {
@@ -30,14 +27,9 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
     const { loginSubstring, limit } = req.query;
     try {
         if (req.query && limit && loginSubstring) {
-            const filteredUsers = yield user_1.default.findAll({
-                where: {
-                    login: {
-                        [sequelize_2.Op.like]: sequelize_1.default.literal(`\'%${loginSubstring}%\'`)
-                    }
-                },
-                limit: Number(limit)
-            });
+            const filteredUsers = yield user_1.default.find({
+                login: { $regex: loginSubstring }
+            }).limit(Number(limit));
             res.json({
                 success: true,
                 message: 'Success',
@@ -54,7 +46,7 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
+        const user = yield user_1.default.findById(req.params.id);
         res.json({
             success: true,
             message: 'Success',
@@ -67,16 +59,12 @@ exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const checkdata = yield user_1.default.findOne({ where: { login: req.body.login } });
+        const checkdata = yield user_1.default.findOne({ login: req.body.login });
         if (checkdata) {
             res.json({ message: 'User already exist', data: checkdata });
         }
         else {
-            const newUUID = uuid_1.v4();
-            const newUserData = Object.assign({ id: newUUID }, req.body);
-            const newUser = yield user_1.default.create(newUserData, {
-                fields: ['id', 'login', 'password', 'age', 'isDeleted']
-            });
+            const newUser = yield user_1.default.create(req.body);
             if (newUser) {
                 res.json({
                     success: true,
@@ -92,10 +80,9 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
+        const user = yield user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
         let response;
         if (user) {
-            yield user.update(req.body);
             response = {
                 success: true,
                 message: 'Success',
@@ -116,14 +103,13 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findOne({ where: { id: req.params.id } });
+        const user = yield user_1.default.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
         let response;
         if (user) {
-            const newUser = Object.assign(Object.assign({}, user), { isDeleted: true });
-            yield user.update(newUser);
             response = {
                 success: true,
-                message: 'Success'
+                message: 'Success',
+                data: user
             };
         }
         else {
