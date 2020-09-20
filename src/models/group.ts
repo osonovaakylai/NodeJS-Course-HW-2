@@ -1,23 +1,17 @@
 module.exports = (sequelize, type) => {
   return sequelize.define(
-    "user",
+    "group",
     {
       id: {
         type: type.UUID,
         primaryKey: true,
       },
-      login: {
-        type: type.STRING,
-        unique: true,
-      },
-      password: {
+      name: {
         type: type.STRING,
       },
-      age: {
-        type: type.INTEGER,
-      },
-      isDeleted: {
-        type: type.BOOLEAN,
+      permissions: {
+        type: type.STRING,
+        enum: ["READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"],
       },
     },
     {

@@ -1,9 +1,11 @@
 const Sequelize = require('sequelize');
 import config from '../config/index';
-import { IUser } from '../interfaces/user';
+import { IGroup, IUser } from '../interfaces/user';
+const UserModel = require('../models/user')
+const GroupModel = require('../models/group')
 
 // postgres://{db_username}:{db_password}@{host}:{port}/{db_name}
-export const sequelize = new Sequelize(config.databaseURL);
+const sequelize = new Sequelize(config.databaseURL);
 
 sequelize
   .authenticate()
@@ -14,34 +16,23 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-const User = sequelize.define(
-  'user',
-  {
-    id: {
-      type: Sequelize.UUID,
-      primaryKey: true
-    },
-    login: {
-      type: Sequelize.STRING,
-      unique: true
-    },
-    password: {
-      type: Sequelize.STRING
-    },
-    age: {
-      type: Sequelize.INTEGER
-    },
-    isDeleted: {
-      type: Sequelize.BOOLEAN
-    }
-  },
-  {
-    timestamps: false,
-    freezeTableName: true
-  }
-);
+const UserGroup = sequelize.define('user_group', {})
+const User = UserModel(sequelize, Sequelize)
+const Group = GroupModel(sequelize, Sequelize)
 
-sequelize.sync({ force: true }).then(() => {
+User.belongsToMany(Group, { through: UserGroup, unique: false })
+Group.belongsToMany(User, { through: UserGroup, unique: false })
+
+sequelize.sync({ force: true }).then(async () => {
+
+  Group.bulkCreate([
+    {
+      id: '3a13f65e-3d4a-45b2-967b-2a57f3741356',
+      name: 'group1',
+      permissions: 'READ'
+    }
+  ])
+
   User.bulkCreate([
     {
       id: '3a13f65e-3d4a-45b2-967b-2a57f37413b1',
@@ -61,7 +52,27 @@ sequelize.sync({ force: true }).then(() => {
     .then(() => {
       return User.findAll();
     })
-    .then((users: IUser[]) => {
-      console.log(users);
-    });
+    .then(addUsersToGroup);
 });
+
+const addUsersToGroup = (users: IUser[]) => {
+  Group.findAll().then((groups: IGroup[]) => {
+    groups.forEach((group: IGroup) => {
+      group.setUsers(users)
+      .then(() => {
+        console.log('Users added to Group successfully')
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+    })
+  })
+}
+
+export {
+  sequelize,
+  User,
+  Group,
+  UserGroup
+}
+

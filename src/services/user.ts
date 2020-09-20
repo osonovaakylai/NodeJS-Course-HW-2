@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import * as express from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IUserRequestSchema } from '../interfaces/user';
-import User from '../models/user';
+import { User } from '../loaders/database';
 
 export const getAllUsers = async (req: express.Request, res: express.Response): Promise<any> => {
   try {

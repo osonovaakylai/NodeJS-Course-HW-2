@@ -1,25 +1,19 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define("user", {
+    return sequelize.define("group", {
         id: {
             type: type.UUID,
             primaryKey: true,
         },
-        login: {
-            type: type.STRING,
-            unique: true,
-        },
-        password: {
+        name: {
             type: type.STRING,
         },
-        age: {
-            type: type.INTEGER,
-        },
-        isDeleted: {
-            type: type.BOOLEAN,
+        permissions: {
+            type: type.STRING,
+            enum: ["READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"],
         },
     }, {
         timestamps: false,
         freezeTableName: true,
     });
 };
-//# sourceMappingURL=user.js.map
+//# sourceMappingURL=group.js.map
