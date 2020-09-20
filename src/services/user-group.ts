@@ -23,7 +23,7 @@ export const getGroupsByUserId = async (
   }
 };
 
-// find groups by given user
+// find users belonging to group
 export const getUsersByGroupId = async (
   req: express.Request,
   res: express.Response

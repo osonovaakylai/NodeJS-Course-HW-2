@@ -31,7 +31,7 @@ exports.getGroupsByUserId = (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(500).json({ success: false, message: "Something went wrong!" });
     }
 });
-// find groups by given user
+// find users belonging to group
 exports.getUsersByGroupId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.params.groupId) {

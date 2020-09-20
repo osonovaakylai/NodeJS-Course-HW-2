@@ -8,25 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsersByParams = exports.getAllUsers = void 0;
-<<<<<<< HEAD
-const sequelize_1 = __importDefault(require("sequelize"));
-const uuid_1 = require("uuid");
-const sequelize_2 = require("sequelize");
 const database_1 = require("../loaders/database");
 exports.getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield database_1.User.findAll();
-=======
-const user_1 = __importDefault(require("../models/user"));
-exports.getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const users = yield user_1.default.find();
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+        const users = yield database_1.User.find();
         res.json({ success: true, message: 'Success', data: users || [] });
     }
     catch (err) {
@@ -37,20 +24,9 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
     const { loginSubstring, limit } = req.query;
     try {
         if (req.query && limit && loginSubstring) {
-<<<<<<< HEAD
-            const filteredUsers = yield database_1.User.findAll({
-                where: {
-                    login: {
-                        [sequelize_2.Op.like]: sequelize_1.default.literal(`\'%${loginSubstring}%\'`)
-                    }
-                },
-                limit: Number(limit)
-            });
-=======
-            const filteredUsers = yield user_1.default.find({
+            const filteredUsers = yield database_1.User.find({
                 login: { $regex: loginSubstring }
             }).limit(Number(limit));
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
             res.json({
                 success: true,
                 message: 'Success',
@@ -67,11 +43,7 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
-        const user = yield database_1.User.findOne({ where: { id: req.params.id } });
-=======
-        const user = yield user_1.default.findById(req.params.id);
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+        const user = yield database_1.User.findById(req.params.id);
         res.json({
             success: true,
             message: 'Success',
@@ -84,24 +56,12 @@ exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
-        const checkdata = yield database_1.User.findOne({ where: { login: req.body.login } });
-=======
-        const checkdata = yield user_1.default.findOne({ login: req.body.login });
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+        const checkdata = yield database_1.User.findOne({ login: req.body.login });
         if (checkdata) {
             res.json({ message: 'User already exist', data: checkdata });
         }
         else {
-<<<<<<< HEAD
-            const newUUID = uuid_1.v4();
-            const newUserData = Object.assign({ id: newUUID }, req.body);
-            const newUser = yield database_1.User.create(newUserData, {
-                fields: ['id', 'login', 'password', 'age', 'isDeleted']
-            });
-=======
-            const newUser = yield user_1.default.create(req.body);
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+            const newUser = yield database_1.User.create(req.body);
             if (newUser) {
                 res.json({
                     success: true,
@@ -117,11 +77,7 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
-        const user = yield database_1.User.findOne({ where: { id: req.params.id } });
-=======
-        const user = yield user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+        const user = yield database_1.User.findByIdAndUpdate(req.params.id, req.body, { new: true });
         let response;
         if (user) {
             response = {
@@ -144,11 +100,7 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
-        const user = yield database_1.User.findOne({ where: { id: req.params.id } });
-=======
-        const user = yield user_1.default.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
->>>>>>> a460fefbbc63cf6157cf231b808a88db686f3827
+        const user = yield database_1.User.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
         let response;
         if (user) {
             response = {

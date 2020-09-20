@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.users = void 0;
-exports.users = [
+exports.MOCK_USERS = void 0;
+exports.MOCK_USERS = [
     {
         id: "3a13f65e-3d4a-45b2-967b-2a57f37413b1",
         login: "user1",
