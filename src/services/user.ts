@@ -17,8 +17,8 @@ export const getUsersByParams = async (req: express.Request, res: express.Respon
   try {
     if (req.query && limit && loginSubstring) {
       const filteredUsers = await User.find({
-        login: {$regex: loginSubstring}
-      }).limit(Number(limit))
+        login: { $regex: loginSubstring }
+      }).limit(Number(limit));
       res.json({
         success: true,
         message: 'Success',
@@ -47,7 +47,7 @@ export const getUserById = async (req: express.Request, res: express.Response): 
 
 export const createUser = async (req: ValidatedRequest<IUserRequestSchema>, res: express.Response): Promise<any> => {
   try {
-    const checkdata = await User.findOne({login: req.body.login});
+    const checkdata = await User.findOne({ login: req.body.login });
     if (checkdata) {
       res.json({ message: 'User already exist', data: checkdata });
     } else {
@@ -67,7 +67,7 @@ export const createUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     let response: any;
     if (user) {
       response = {
@@ -89,7 +89,7 @@ export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const deleteUser = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, {isDeleted: true}, {new: true});
+    const user = await User.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
     let response: any;
     if (user) {
       response = {

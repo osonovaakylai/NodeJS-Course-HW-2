@@ -1,6 +1,6 @@
 module.exports = (sequelize, type) => {
   return sequelize.define(
-    "group",
+    'group',
     {
       id: {
         type: type.UUID,
@@ -11,7 +11,7 @@ module.exports = (sequelize, type) => {
       },
       permissions: {
         type: type.STRING,
-        enum: ["READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"],
+        enum: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'],
       },
     },
     {

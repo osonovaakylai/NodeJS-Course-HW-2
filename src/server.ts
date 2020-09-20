@@ -1,5 +1,5 @@
 import app from './loaders/app';
-import config from './config/index'
+import config from './config/index';
 
 const port = parseInt(config.port);
 

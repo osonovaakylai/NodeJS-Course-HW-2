@@ -1,5 +1,5 @@
-import * as express from "express";
-import { Group, User, UserGroup } from "../loaders/database";
+import * as express from 'express';
+import { Group, User } from '../loaders/database';
 
 // find groups by given user
 export const getGroupsByUserId = async (
@@ -14,12 +14,12 @@ export const getGroupsByUserId = async (
             { model: User, where: { id: req.params.userId } },
         ],
       });
-      res.json({ success: true, message: "Success", data: groups || [] });
+      res.json({ success: true, message: 'Success', data: groups || [] });
     } else {
-      res.status(500).json({ success: false, message: "Id not provided!" });
+      res.status(500).json({ success: false, message: 'Id not provided!' });
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: "Something went wrong!" });
+    res.status(500).json({ success: false, message: 'Something went wrong!' });
   }
 };
 
@@ -36,11 +36,11 @@ export const getUsersByGroupId = async (
           { model: Group, where: { id: req.params.groupId } },
         ],
       });
-      res.json({ success: true, message: "Success", data: users || [] });
+      res.json({ success: true, message: 'Success', data: users || [] });
     } else {
-      res.status(500).json({ success: false, message: "Id not provided!" });
+      res.status(500).json({ success: false, message: 'Id not provided!' });
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: "Something went wrong!" });
+    res.status(500).json({ success: false, message: 'Something went wrong!' });
   }
 };

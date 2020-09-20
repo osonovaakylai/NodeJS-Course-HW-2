@@ -1,4 +1,4 @@
-import { ContainerTypes, ValidatedRequestSchema } from "express-joi-validation";
+import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
 
 export interface IUser {
   id: string;

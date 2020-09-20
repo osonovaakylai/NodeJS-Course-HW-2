@@ -27,7 +27,7 @@
         "no-debugger": 1,
         // Possible errors
         "comma-dangle": [
-            2,
+            0,
             "never"
         ],
         "no-cond-assign": [

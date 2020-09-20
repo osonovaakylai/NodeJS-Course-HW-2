@@ -36,7 +36,7 @@ export const createGroup = async (req: ValidatedRequest<IGroupRequestSchema>, re
       const newGroupData = {
         id: newUUID,
         name: req.body.name,
-        permissions: req.body.permissions.join(","),
+        permissions: req.body.permissions.join(','),
       };
       const newGroup = await Group.create(newGroupData, {
         fields: ['id', 'name', 'permissions']

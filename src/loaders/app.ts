@@ -1,7 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import Router from '../api/router';
-import {sequelize} from './database';
+import { sequelize } from './database';
 import * as swaggerDocument from '../config/swagger.json';
 
 class App {
