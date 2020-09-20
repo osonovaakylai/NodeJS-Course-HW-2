@@ -1,3 +1,6 @@
+import Sequelize from 'sequelize';
+import { v4 as uuid } from 'uuid';
+import { Op } from 'sequelize';
 import * as express from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IUserRequestSchema } from '../interfaces/user';
@@ -5,7 +8,7 @@ import { User } from '../loaders/database';
 
 export const getAllUsers = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const users = await User.find();
+    const users = await User.findAll();
     res.json({ success: true, message: 'Success', data: users || [] });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Something went wrong!' });
@@ -16,9 +19,14 @@ export const getUsersByParams = async (req: express.Request, res: express.Respon
   const { loginSubstring, limit } = req.query;
   try {
     if (req.query && limit && loginSubstring) {
-      const filteredUsers = await User.find({
-        login: { $regex: loginSubstring }
-      }).limit(Number(limit));
+      const filteredUsers = await User.findAll({
+        where: {
+          login: {
+            [Op.like]: Sequelize.literal(`\'%${loginSubstring}%\'`)
+          }
+        },
+        limit: Number(limit)
+      });
       res.json({
         success: true,
         message: 'Success',
@@ -34,7 +42,7 @@ export const getUsersByParams = async (req: express.Request, res: express.Respon
 
 export const getUserById = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ where: { id: req.params.id } });
     res.json({
       success: true,
       message: 'Success',
@@ -47,11 +55,15 @@ export const getUserById = async (req: express.Request, res: express.Response): 
 
 export const createUser = async (req: ValidatedRequest<IUserRequestSchema>, res: express.Response): Promise<any> => {
   try {
-    const checkdata = await User.findOne({ login: req.body.login });
+    const checkdata = await User.findOne({ where: { login: req.body.login } });
     if (checkdata) {
       res.json({ message: 'User already exist', data: checkdata });
     } else {
-      const newUser = await User.create(req.body);
+      const newUUID = uuid();
+      const newUserData = { id: newUUID, ...req.body };
+      const newUser = await User.create(newUserData, {
+        fields: ['id', 'login', 'password', 'age', 'isDeleted']
+      });
       if (newUser) {
         res.json({
           success: true,
@@ -67,9 +79,10 @@ export const createUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const user = await User.findOne({ where: { id: req.params.id } });
     let response: any;
     if (user) {
+      await user.update(req.body);
       response = {
         success: true,
         message: 'Success',
@@ -89,9 +102,11 @@ export const updateUser = async (req: ValidatedRequest<IUserRequestSchema>, res:
 
 export const deleteUser = async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
+    const user = await User.findOne({ where: { id: req.params.id } });
     let response: any;
     if (user) {
+      const newUser = { ...user, isDeleted: true }
+      await user.update(newUser);
       response = {
         success: true,
         message: 'Success',
