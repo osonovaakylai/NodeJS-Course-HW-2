@@ -13,24 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserGroup = exports.Group = exports.User = exports.sequelize = void 0;
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
 const index_1 = __importDefault(require("../config/index"));
 const group_1 = require("../mockData/group");
 const user_1 = require("../mockData/user");
-const UserModel = require("../models/user");
-const GroupModel = require("../models/group");
+const UserModel = require('../models/user');
+const GroupModel = require('../models/group');
 // postgres://{db_username}:{db_password}@{host}:{port}/{db_name}
 const sequelize = new Sequelize(index_1.default.databaseURL);
 exports.sequelize = sequelize;
 sequelize
     .authenticate()
     .then(() => {
-    console.log("Connection has been established successfully.");
+    console.log('Connection has been established successfully.');
 })
     .catch((err) => {
-    console.error("Unable to connect to the database:", err);
+    console.error('Unable to connect to the database:', err);
 });
-const UserGroup = sequelize.define("user_group", {});
+const UserGroup = sequelize.define('user_group', {});
 exports.UserGroup = UserGroup;
 const User = UserModel(sequelize, Sequelize);
 exports.User = User;
@@ -66,7 +66,7 @@ const addUsersToGroup = (users) => {
             group
                 .setUsers(users)
                 .then(() => {
-                console.log("Users added to Group successfully");
+                console.log('Users added to Group successfully');
             })
                 .catch((err) => {
                 console.log(err);

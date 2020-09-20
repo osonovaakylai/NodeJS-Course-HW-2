@@ -45,7 +45,7 @@ exports.createGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             const newGroupData = {
                 id: newUUID,
                 name: req.body.name,
-                permissions: req.body.permissions.join(","),
+                permissions: req.body.permissions.join(','),
             };
             const newGroup = yield database_1.Group.create(newGroupData, {
                 fields: ['id', 'name', 'permissions']

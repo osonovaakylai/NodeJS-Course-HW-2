@@ -21,14 +21,14 @@ exports.getGroupsByUserId = (req, res) => __awaiter(void 0, void 0, void 0, func
                     { model: database_1.User, where: { id: req.params.userId } },
                 ],
             });
-            res.json({ success: true, message: "Success", data: groups || [] });
+            res.json({ success: true, message: 'Success', data: groups || [] });
         }
         else {
-            res.status(500).json({ success: false, message: "Id not provided!" });
+            res.status(500).json({ success: false, message: 'Id not provided!' });
         }
     }
     catch (err) {
-        res.status(500).json({ success: false, message: "Something went wrong!" });
+        res.status(500).json({ success: false, message: 'Something went wrong!' });
     }
 });
 // find users belonging to group
@@ -41,14 +41,14 @@ exports.getUsersByGroupId = (req, res) => __awaiter(void 0, void 0, void 0, func
                     { model: database_1.Group, where: { id: req.params.groupId } },
                 ],
             });
-            res.json({ success: true, message: "Success", data: users || [] });
+            res.json({ success: true, message: 'Success', data: users || [] });
         }
         else {
-            res.status(500).json({ success: false, message: "Id not provided!" });
+            res.status(500).json({ success: false, message: 'Id not provided!' });
         }
     }
     catch (err) {
-        res.status(500).json({ success: false, message: "Something went wrong!" });
+        res.status(500).json({ success: false, message: 'Something went wrong!' });
     }
 });
 //# sourceMappingURL=user-group.js.map
