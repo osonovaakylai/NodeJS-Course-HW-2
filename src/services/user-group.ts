@@ -1,10 +1,15 @@
 import * as express from 'express';
 import { Group, User } from '../loaders/database';
+import Logger from '../config/logger'
+import { ID_NOT_PROVIDED, SUCCESS_MESSAGE } from '../util/constants';
+
+const logger = new Logger('app')
 
 // find groups by given user
 export const getGroupsByUserId = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: any
 ): Promise<any> => {
   try {
     if (req.params.userId) {
@@ -15,18 +20,21 @@ export const getGroupsByUserId = async (
         ],
       });
       res.json({ success: true, message: 'Success', data: groups || [] });
+      logger.info(SUCCESS_MESSAGE)
     } else {
-      res.status(500).json({ success: false, message: 'Id not provided!' });
+      res.status(500).json({ success: false, message: ID_NOT_PROVIDED });
+      logger.error(ID_NOT_PROVIDED, { success: false })
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Something went wrong!' });
+    return next(err)
   }
 };
 
 // find users belonging to group
 export const getUsersByGroupId = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: any
 ): Promise<any> => {
   try {
     if (req.params.groupId) {
@@ -37,10 +45,12 @@ export const getUsersByGroupId = async (
         ],
       });
       res.json({ success: true, message: 'Success', data: users || [] });
+      logger.info(SUCCESS_MESSAGE)
     } else {
-      res.status(500).json({ success: false, message: 'Id not provided!' });
+      res.status(500).json({ success: false, message: ID_NOT_PROVIDED });
+      logger.error(ID_NOT_PROVIDED, { success: false })
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Something went wrong!' });
+    return next(err)
   }
 };

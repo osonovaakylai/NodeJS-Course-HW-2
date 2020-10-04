@@ -29,17 +29,18 @@ const user_1 = require("../services/user");
 const group_1 = require("../services/group");
 const group_validator_1 = require("../validators/group-validator");
 const user_group_1 = require("../services/user-group");
+const error_handler_1 = __importDefault(require("../middlewares/error-handler"));
 class Router {
     constructor(server) {
         const router = express.Router();
         router.get('/', user_1.getAllUsers);
-        router.get('/users', cors_1.default(), user_1.getUsersByParams);
-        router.post('/user/create', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
+        router.get('/user', cors_1.default(), user_1.getUsersByParams);
+        router.post('/user', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
         router.get('/user/:id', cors_1.default(), user_1.getUserById);
         router.put('/user/:id', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
         router.delete('/user/:id', cors_1.default(), user_1.deleteUser);
-        router.get('/groups', cors_1.default(), group_1.getAllGroups);
-        router.post('/group/create', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
+        router.get('/group', cors_1.default(), group_1.getAllGroups);
+        router.post('/group', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
         router.get('/group/:id', cors_1.default(), group_1.getGroupById);
         router.put('/group/:id', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
         router.delete('/group/:id', cors_1.default(), group_1.deleteGroup);
@@ -47,6 +48,7 @@ class Router {
         router.get('/users/:groupId/group', cors_1.default(), user_group_1.getUsersByGroupId);
         router.options('*', cors_1.default());
         server.use('/', router);
+        server.use(error_handler_1.default);
     }
 }
 exports.default = Router;

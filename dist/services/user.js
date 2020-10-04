@@ -17,16 +17,20 @@ const sequelize_1 = __importDefault(require("sequelize"));
 const uuid_1 = require("uuid");
 const sequelize_2 = require("sequelize");
 const database_1 = require("../loaders/database");
-exports.getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logger_1 = __importDefault(require("../config/logger"));
+const constants_1 = require("../util/constants");
+const logger = new logger_1.default('app');
+exports.getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield database_1.User.findAll();
         res.json({ success: true, message: 'Success', data: users || [] });
+        logger.info(constants_1.SUCCESS_MESSAGE);
     }
     catch (err) {
-        res.status(500).json({ success: false, message: 'Something went wrong!' });
+        next(err);
     }
 });
-exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUsersByParams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { loginSubstring, limit } = req.query;
     try {
         if (req.query && limit && loginSubstring) {
@@ -43,33 +47,46 @@ exports.getUsersByParams = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 message: 'Success',
                 data: filteredUsers || []
             });
+            logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
-            res.status(400).json({ success: false, message: 'Bad request' });
+            res.status(400).json({ success: false, message: constants_1.BAD_REQUEST_MESSAGE });
+            logger.info(constants_1.BAD_REQUEST_MESSAGE);
         }
     }
     catch (err) {
-        res.status(404).json({ success: false, message: 'No such user' });
+        next(err);
     }
 });
-exports.getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield database_1.User.findOne({ where: { id: req.params.id } });
-        res.json({
-            success: true,
-            message: 'Success',
-            data: user || null
-        });
+        if (user) {
+            res.json({
+                success: true,
+                message: 'Success',
+                data: user
+            });
+            logger.info(constants_1.SUCCESS_MESSAGE);
+        }
+        else {
+            res.json({
+                success: false,
+                message: constants_1.NOT_FOUND_MESSAGE
+            });
+            logger.info(constants_1.NOT_FOUND_MESSAGE);
+        }
     }
     catch (err) {
-        res.status(404).json({ success: false, message: 'Something went wrong!' });
+        next(err);
     }
 });
-exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const checkdata = yield database_1.User.findOne({ where: { login: req.body.login } });
         if (checkdata) {
-            res.json({ message: 'User already exist', data: checkdata });
+            res.json({ message: constants_1.ALREADY_EXIST, data: checkdata });
+            logger.info(constants_1.ALREADY_EXIST);
         }
         else {
             const newUUID = uuid_1.v4();
@@ -83,14 +100,15 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                     message: 'Success',
                     data: newUser
                 });
+                logger.info(constants_1.SUCCESS_MESSAGE);
             }
         }
     }
     catch (err) {
-        res.status(400).json({ success: false, message: 'Something went wrong!' });
+        next(err);
     }
 });
-exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield database_1.User.findOne({ where: { id: req.params.id } });
         let response;
@@ -101,20 +119,22 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 message: 'Success',
                 data: user
             };
+            logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
             response = {
                 success: false,
-                message: 'No such user'
+                message: constants_1.NOT_FOUND_MESSAGE
             };
+            logger.info(constants_1.NOT_FOUND_MESSAGE);
         }
         return res.json(response);
     }
     catch (err) {
-        res.status(500).json({ success: false, message: 'Something went wrong!' });
+        next(err);
     }
 });
-exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield database_1.User.findOne({ where: { id: req.params.id } });
         let response;
@@ -126,17 +146,19 @@ exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 message: 'Success',
                 data: user
             };
+            logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
             response = {
                 success: false,
-                message: 'No such user'
+                message: constants_1.NOT_FOUND_MESSAGE
             };
+            logger.info(constants_1.NOT_FOUND_MESSAGE);
         }
         return res.json(response);
     }
     catch (err) {
-        res.status(500).json({ success: false, message: 'Something went wrong!' });
+        next(err);
     }
 });
 //# sourceMappingURL=user.js.map

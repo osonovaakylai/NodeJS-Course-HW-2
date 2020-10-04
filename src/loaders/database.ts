@@ -5,6 +5,10 @@ import { MOCK_GROUPS } from '../mockData/group';
 import { MOCK_USERS } from '../mockData/user';
 const UserModel = require('../models/user');
 const GroupModel = require('../models/group');
+import Logger from '../config/logger'
+import { ERROR_MESSAGE } from '../util/constants';
+
+const logger = new Logger('app')
 
 // postgres://{db_username}:{db_password}@{host}:{port}/{db_name}
 const sequelize = new Sequelize(config.databaseURL);
@@ -12,10 +16,11 @@ const sequelize = new Sequelize(config.databaseURL);
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    logger.info('Connection has been established successfully.');
   })
   .catch((err: any) => {
-    console.error('Unable to connect to the database:', err);
+    logger.error('Unable to connect to the database:')
+    console.error(err);
   });
 
 const UserGroup = sequelize.define('user_group', {});
@@ -32,7 +37,8 @@ sequelize.sync({ force: true }).then(async () => {
       return groups;
     });
   } catch (error) {
-    console.log(error);
+    logger.error(ERROR_MESSAGE)
+    console.error(error);
   }
 
   try {
@@ -43,7 +49,8 @@ sequelize.sync({ force: true }).then(async () => {
       })
       .then(addUsersToGroup);
   } catch (error) {
-    console.log(error);
+    logger.error(ERROR_MESSAGE)
+    console.error(error);
   }
 });
 
@@ -56,7 +63,8 @@ const addUsersToGroup = (users: IUser[]) => {
           console.log('Users added to Group successfully');
         })
         .catch((err: any) => {
-          console.log(err);
+          logger.error(ERROR_MESSAGE)
+          console.error(err);
         });
     });
   });
