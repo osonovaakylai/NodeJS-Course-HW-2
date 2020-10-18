@@ -18,20 +18,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const group_validator_1 = require("../validators/group-validator");
 const user_validator_1 = require("../validators/user-validator");
 const group_1 = require("../services/group");
 const router = express.Router();
-router.get('/group', cors_1.default(), group_1.getAllGroups);
-router.post('/group', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
-router.get('/group/:id', cors_1.default(), group_1.getGroupById);
-router.put('/group/:id', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
-router.delete('/group/:id', cors_1.default(), group_1.deleteGroup);
+router.get('/group', group_1.getAllGroups);
+router.post('/group', user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
+router.get('/group/:id', group_1.getGroupById);
+router.put('/group/:id', user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
+router.delete('/group/:id', group_1.deleteGroup);
 exports.default = router;
 //# sourceMappingURL=group-router.js.map

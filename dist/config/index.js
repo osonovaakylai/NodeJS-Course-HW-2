@@ -9,7 +9,13 @@ const envFound = dotenv_1.default.config();
 if (envFound.error) {
     throw new Error("⚠️  Couldn't find .env file  ⚠️");
 }
+const secret = 'supersecret';
+const corsOptions = {
+    origin: "http://localhost:8080"
+};
 exports.default = {
+    secret,
+    corsOptions,
     port: process.env.PORT,
     databasePort: process.env.DB_PORT,
     databaseURL: process.env.DATABASE_URL

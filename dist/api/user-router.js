@@ -18,20 +18,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const user_validator_1 = require("../validators/user-validator");
 const user_1 = require("../services/user");
 const router = express.Router();
 router.get('/user', user_1.getAllUsers);
-router.get('/user', cors_1.default(), user_1.getUsersByParams);
-router.post('/user', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
-router.get('/user/:id', cors_1.default(), user_1.getUserById);
-router.put('/user/:id', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
-router.delete('/user/:id', cors_1.default(), user_1.deleteUser);
-module.exports = router;
+router.get('/user', user_1.getUsersByParams);
+router.post('/user', user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
+router.get('/user/:id', user_1.getUserById);
+router.put('/user/:id', user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
+router.delete('/user/:id', user_1.deleteUser);
+exports.default = router;
 //# sourceMappingURL=user-router.js.map

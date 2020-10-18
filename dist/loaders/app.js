@@ -24,10 +24,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const cors_1 = __importDefault(require("cors"));
 const router_1 = __importDefault(require("../api/router"));
 const database_1 = require("./database");
 const swaggerDocument = __importStar(require("../config/swagger.json"));
 const logger_1 = __importDefault(require("../config/logger"));
+const index_1 = __importDefault(require("../config/index"));
 class App {
     constructor() {
         this.Start = (port) => {
@@ -48,6 +50,7 @@ class App {
         this.db = database_1.sequelize;
         this.logger = new logger_1.default('app');
         new router_1.default(this.httpServer);
+        this.httpServer.use(cors_1.default(index_1.default.corsOptions));
         this.httpServer.use('/swagger', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
     }
 }

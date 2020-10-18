@@ -25,7 +25,7 @@ exports.getAllGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         logger.info(constants_1.SUCCESS_MESSAGE);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.getGroupById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,7 +48,7 @@ exports.getGroupById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.createGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -79,7 +79,7 @@ exports.createGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.updateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,7 +105,7 @@ exports.updateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         return res.json(response);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.deleteGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -129,7 +129,7 @@ exports.deleteGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         return res.json(response);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 //# sourceMappingURL=group.js.map

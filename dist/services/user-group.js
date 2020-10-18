@@ -36,7 +36,7 @@ exports.getGroupsByUserId = (req, res, next) => __awaiter(void 0, void 0, void 0
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 // find users belonging to group
@@ -58,7 +58,7 @@ exports.getUsersByGroupId = (req, res, next) => __awaiter(void 0, void 0, void 0
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 //# sourceMappingURL=user-group.js.map

@@ -1,9 +1,12 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
+
 import Router from '../api/router';
 import { sequelize } from './database';
 import * as swaggerDocument from '../config/swagger.json';
-import Logger from '../config/logger'
+import Logger from '../config/logger';
+import config from '../config/index';
 
 class App {
   private httpServer: any;
@@ -17,6 +20,8 @@ class App {
     this.logger = new Logger('app')
 
     new Router(this.httpServer);
+
+    this.httpServer.use(cors(config.corsOptions))
 
     this.httpServer.use(
       '/swagger',

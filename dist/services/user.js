@@ -27,7 +27,7 @@ exports.getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         logger.info(constants_1.SUCCESS_MESSAGE);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.getUsersByParams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +55,7 @@ exports.getUsersByParams = (req, res, next) => __awaiter(void 0, void 0, void 0,
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.getUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,7 +78,7 @@ exports.getUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,7 +105,7 @@ exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -131,7 +131,7 @@ exports.updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.json(response);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -158,7 +158,7 @@ exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.json(response);
     }
     catch (err) {
-        next(err);
+        return next(err);
     }
 });
 //# sourceMappingURL=user.js.map

@@ -23,30 +23,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const user_validator_1 = require("../validators/user-validator");
 const user_1 = require("../services/user");
+const auth_1 = require("../services/auth");
 const group_1 = require("../services/group");
 const group_validator_1 = require("../validators/group-validator");
 const user_group_1 = require("../services/user-group");
 const error_handler_1 = __importDefault(require("../middlewares/error-handler"));
+const check_token_1 = __importDefault(require("../middlewares/check-token"));
 class Router {
     constructor(server) {
         const router = express.Router();
-        router.get('/', user_1.getAllUsers);
-        router.get('/user', cors_1.default(), user_1.getUsersByParams);
-        router.post('/user', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
-        router.get('/user/:id', cors_1.default(), user_1.getUserById);
-        router.put('/user/:id', cors_1.default(), user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
-        router.delete('/user/:id', cors_1.default(), user_1.deleteUser);
-        router.get('/group', cors_1.default(), group_1.getAllGroups);
-        router.post('/group', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
-        router.get('/group/:id', cors_1.default(), group_1.getGroupById);
-        router.put('/group/:id', cors_1.default(), user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
-        router.delete('/group/:id', cors_1.default(), group_1.deleteGroup);
-        router.get('/groups/:userId/user', cors_1.default(), user_group_1.getGroupsByUserId);
-        router.get('/users/:groupId/group', cors_1.default(), user_group_1.getUsersByGroupId);
-        router.options('*', cors_1.default());
+        router.post('/', auth_1.checkAPI);
+        router.post('/login', auth_1.login);
+        router.get('/logout', auth_1.logout);
+        router.get('/users', user_1.getAllUsers);
+        router.get('/user', check_token_1.default, user_1.getUsersByParams);
+        router.post('/user', check_token_1.default, user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
+        router.get('/user/:id', check_token_1.default, user_1.getUserById);
+        router.put('/user/:id', check_token_1.default, user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
+        router.delete('/user/:id', check_token_1.default, user_1.deleteUser);
+        router.get('/group', check_token_1.default, group_1.getAllGroups);
+        router.post('/group', check_token_1.default, user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
+        router.get('/group/:id', check_token_1.default, group_1.getGroupById);
+        router.put('/group/:id', check_token_1.default, user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
+        router.delete('/group/:id', check_token_1.default, group_1.deleteGroup);
+        router.get('/groups/:userId/user', check_token_1.default, user_group_1.getGroupsByUserId);
+        router.get('/users/:groupId/group', check_token_1.default, user_group_1.getUsersByGroupId);
         server.use('/', router);
         server.use(error_handler_1.default);
     }
