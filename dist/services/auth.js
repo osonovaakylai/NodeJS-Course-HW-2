@@ -32,7 +32,7 @@ exports.checkAPI = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 // login
 exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield database_1.User.findOne({ login: req.body.username });
+        const user = yield database_1.User.findOne({ where: { login: req.body.login } });
         if (user) {
             if (req.body.password !== user.password) {
                 logger.error(constants_1.BAD_REQUEST_MESSAGE, { success: false });
@@ -41,7 +41,7 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             const token = jsonwebtoken_1.default.sign({ id: user.id }, index_1.default.secret, {
                 expiresIn: 86400,
             });
-            res.status(200).send({ auth: true, token: token });
+            res.status(200).send({ auth: true, token });
             logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {

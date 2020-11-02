@@ -37,7 +37,7 @@ class Router {
         router.post('/', auth_1.checkAPI);
         router.post('/login', auth_1.login);
         router.get('/logout', auth_1.logout);
-        router.get('/users', user_1.getAllUsers);
+        router.get('/users', check_token_1.default, user_1.getAllUsers);
         router.get('/user', check_token_1.default, user_1.getUsersByParams);
         router.post('/user', check_token_1.default, user_validator_1.validator.body(user_validator_1.bodySchema), user_1.createUser);
         router.get('/user/:id', check_token_1.default, user_1.getUserById);

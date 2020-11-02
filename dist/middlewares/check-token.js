@@ -10,7 +10,6 @@ const constants_1 = require("../util/constants");
 const logger = new logger_1.default('app');
 const checkToken = (req, res, next) => {
     const token = req.headers['x-access-token'];
-    console.log(token);
     if (!token) {
         logger.info(constants_1.NO_TOKEN);
         return res

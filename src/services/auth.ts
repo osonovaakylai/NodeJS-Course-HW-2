@@ -31,7 +31,7 @@ export const login = async (
   next: any
 ): Promise<any> => {
   try {
-    const user = await User.findOne({ login: req.body.username });
+    const user = await User.findOne({ where: { login: req.body.login } });
     if (user) {
       if (req.body.password !== user.password) {
         logger.error(BAD_REQUEST_MESSAGE, { success: false });
@@ -41,7 +41,7 @@ export const login = async (
         expiresIn: 86400, //expires in 24 hours
       });
 
-      res.status(200).send({ auth: true, token: token });
+      res.status(200).send({ auth: true, token });
       logger.info(SUCCESS_MESSAGE);
     } else {
       logger.error(NOT_FOUND_MESSAGE, { success: false });

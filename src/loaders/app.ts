@@ -9,8 +9,8 @@ import Logger from '../config/logger';
 import config from '../config/index';
 
 class App {
-  private httpServer: any;
-  private db: any;
+  public httpServer: any;
+  public db: any;
   private logger: any;
 
   constructor() {
