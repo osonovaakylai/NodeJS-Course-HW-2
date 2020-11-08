@@ -39,12 +39,34 @@ describe('User controller', () => {
       });
   });
 
-  it('should get all users by params', (done) => {
+  it('should handle token not provided case', (done) => {
     request(server.httpServer)
       .get('/users')
+      .set('x-access-token', null)
+      .expect(401)
+      .end((err) => {
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('should get all users by params', (done) => {
+    request(server.httpServer)
+      .get('/user')
       .set('x-access-token', token)
       .query({ loginSubstring: 'er', limit: 3 })
       .expect(200)
+      .end((err) => {
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('should handle not provided query params case', (done) => {
+    request(server.httpServer)
+      .get('/user')
+      .set('x-access-token', token)
+      .expect(400)
       .end((err) => {
         if (err) return done(err);
         done();
