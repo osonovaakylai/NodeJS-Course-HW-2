@@ -1,12 +1,12 @@
 import request from 'supertest';
 
-import { MOCK_GROUPS } from '../mockData/group';
 import app from '../loaders/app';
 
 const server = new app();
 
-describe('Group controller', () => {
+describe('User Group controller', () => {
   let token;
+  let createdUsers = [];
   let createdGroups = [];
 
   beforeAll((done) => {
@@ -28,6 +28,18 @@ describe('Group controller', () => {
       });
   });
 
+  it('should get all users', (done) => {
+    request(server.httpServer)
+      .get('/users')
+      .set('x-access-token', token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        createdUsers = res.body.data;
+        done();
+      });
+  });
+
   it('should get groups', (done) => {
     request(server.httpServer)
       .get('/group')
@@ -43,36 +55,9 @@ describe('Group controller', () => {
       });
   });
 
-  it('should handle token not provided case', (done) => {
+  it('should get groups by user id', (done) => {
     request(server.httpServer)
-      .get('/group')
-      .set('x-access-token', null)
-      .expect(401)
-      .end((err) => {
-        if (err) return done(err);
-        done();
-      });
-  });
-
-  it('should create new group', (done) => {
-    const newGroup = {
-      name: 'group123',
-      permissions: ['READ'],
-    };
-    request(server.httpServer)
-      .post('/group')
-      .set('x-access-token', token)
-      .send(newGroup)
-      .expect(200)
-      .end((err) => {
-        if (err) return done(err);
-        done();
-      });
-  });
-
-  it('should get group by id', (done) => {
-    request(server.httpServer)
-      .get(`/group/${createdGroups[0]._id}`)
+      .get(`/groups/${createdUsers[0]._id}/user`)
       .set('x-access-token', token)
       .expect(200)
       .end((err) => {
@@ -81,32 +66,20 @@ describe('Group controller', () => {
       });
   });
 
-  it('should get error if there is no group with such id', (done) => {
+  it('should response with error if user id is not valid', (done) => {
     request(server.httpServer)
-      .put('/group/123')
+      .get('/groups/123/user')
       .set('x-access-token', token)
-      .expect(400)
+      .expect(500)
       .end((err) => {
         if (err) return done(err);
         done();
       });
   });
 
-  it('should update group by id', (done) => {
+  it('should get users by group id', (done) => {
     request(server.httpServer)
-      .put(`/group/${createdGroups[0]._id}`)
-      .set('x-access-token', token)
-      .send(MOCK_GROUPS[0])
-      .expect(200)
-      .end((err) => {
-        if (err) return done(err);
-        done();
-      });
-  });
-
-  it('should delete group', (done) => {
-    request(server.httpServer)
-      .delete(`/group/${createdGroups[0]._id}`)
+      .get(`/users/${createdGroups[0]._id}/group`)
       .set('x-access-token', token)
       .expect(200)
       .end((err) => {
@@ -115,9 +88,9 @@ describe('Group controller', () => {
       });
   });
 
-  it('should should response with error on deleting not existing group', (done) => {
+  it('should response with error if group id is not valid', (done) => {
     request(server.httpServer)
-      .delete('/group/123')
+      .get('/users/1234/group')
       .set('x-access-token', token)
       .expect(500)
       .end((err) => {

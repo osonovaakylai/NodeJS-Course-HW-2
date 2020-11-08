@@ -1,4 +1,5 @@
 import request from 'supertest';
+
 import app from '../loaders/app';
 
 const server = new app();

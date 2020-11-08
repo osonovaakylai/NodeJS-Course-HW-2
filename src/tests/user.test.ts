@@ -1,5 +1,6 @@
-import { MOCK_USERS } from '../mockData/user';
 import request from 'supertest';
+
+import { MOCK_USERS } from '../mockData/user';
 import app from '../loaders/app';
 
 const server = new app();

@@ -29,7 +29,7 @@ exports.getAllGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getGroupById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const group = yield group_1.default.findOne({ id: req.params.id });
+        const group = yield group_1.default.findById(req.params.id);
         if (group) {
             logger.info(constants_1.SUCCESS_MESSAGE);
             res.status(200).json({

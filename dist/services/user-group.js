@@ -17,19 +17,35 @@ const user_1 = __importDefault(require("../models/user"));
 const group_1 = __importDefault(require("../models/group"));
 const logger_1 = __importDefault(require("../config/logger"));
 const constants_1 = require("../util/constants");
-const logger = new logger_1.default('app');
+const logger = new logger_1.default("app");
 // find groups by given user
 exports.getGroupsByUserId = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.params.userId) {
-            const groups = yield group_1.default.find({
-                include: [
-                    user_1.default,
-                    { model: user_1.default, where: { id: req.params.userId } },
-                ],
-            });
-            res.json({ success: true, message: 'Success', data: groups || [] });
-            logger.info(constants_1.SUCCESS_MESSAGE);
+            const user = yield user_1.default.findById(req.params.userId);
+            if (user) {
+                const groups = yield group_1.default.find({
+                    include: [user_1.default, { model: user_1.default, where: { id: req.params.userId } }],
+                });
+                if (groups) {
+                    res.json({ success: true, message: "Success", data: groups || [] });
+                    logger.info(constants_1.SUCCESS_MESSAGE);
+                }
+                else {
+                    res
+                        .status(404)
+                        .json({ success: true, message: "Success", data: groups || [] });
+                    logger.info(constants_1.SUCCESS_MESSAGE);
+                }
+                logger.info(constants_1.SUCCESS_MESSAGE);
+            }
+            else {
+                logger.info(constants_1.NOT_FOUND_MESSAGE);
+                res.status(404).json({
+                    success: false,
+                    message: constants_1.NOT_FOUND_MESSAGE,
+                });
+            }
         }
         else {
             res.status(500).json({ success: false, message: constants_1.ID_NOT_PROVIDED });
@@ -44,14 +60,21 @@ exports.getGroupsByUserId = (req, res, next) => __awaiter(void 0, void 0, void 0
 exports.getUsersByGroupId = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.params.groupId) {
-            const users = yield user_1.default.find({
-                include: [
-                    group_1.default,
-                    { model: group_1.default, where: { id: req.params.groupId } },
-                ],
-            });
-            res.json({ success: true, message: 'Success', data: users || [] });
-            logger.info(constants_1.SUCCESS_MESSAGE);
+            const group = yield group_1.default.findById(req.params.groupId);
+            if (group) {
+                const users = yield user_1.default.find({
+                    include: [group_1.default, { model: group_1.default, where: { id: req.params.groupId } }],
+                });
+                logger.info(constants_1.SUCCESS_MESSAGE);
+                res.json({ success: true, message: "Success", data: users || [] });
+            }
+            else {
+                logger.info(constants_1.NOT_FOUND_MESSAGE);
+                res.status(404).json({
+                    success: false,
+                    message: constants_1.NOT_FOUND_MESSAGE,
+                });
+            }
         }
         else {
             res.status(500).json({ success: false, message: constants_1.ID_NOT_PROVIDED });
