@@ -1,22 +1,13 @@
-module.exports = (sequelize, type) => {
-  return sequelize.define(
-    'group',
-    {
-      id: {
-        type: type.UUID,
-        primaryKey: true,
-      },
-      name: {
-        type: type.STRING,
-      },
-      permissions: {
-        type: type.STRING,
-        enum: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'],
-      },
-    },
-    {
-      timestamps: false,
-      freezeTableName: true,
-    }
-  );
-};
+import mongoose from 'mongoose';
+
+const Schema = mongoose.Schema;
+const GroupSchema = new Schema({
+  id: String,
+  name: String,
+  permissions: Array,
+});
+
+mongoose.model('Group', GroupSchema);
+const Group = mongoose.model('Group');
+
+export default Group;

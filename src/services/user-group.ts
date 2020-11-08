@@ -1,5 +1,6 @@
 import * as express from 'express';
-import { Group, User } from '../loaders/database';
+import User from '../models/user';
+import Group from '../models/group';
 import Logger from '../config/logger'
 import { ID_NOT_PROVIDED, SUCCESS_MESSAGE } from '../util/constants';
 
@@ -13,7 +14,7 @@ export const getGroupsByUserId = async (
 ): Promise<any> => {
   try {
     if (req.params.userId) {
-      const groups = await Group.findAll({
+      const groups = await Group.find({
         include: [
             User,
             { model: User, where: { id: req.params.userId } },
@@ -38,7 +39,7 @@ export const getUsersByGroupId = async (
 ): Promise<any> => {
   try {
     if (req.params.groupId) {
-      const users = await User.findAll({
+      const users = await User.find({
         include: [
           Group,
           { model: Group, where: { id: req.params.groupId } },

@@ -26,7 +26,7 @@ const express_1 = __importDefault(require("express"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const cors_1 = __importDefault(require("cors"));
 const router_1 = __importDefault(require("../api/router"));
-const database_1 = require("./database");
+const database_1 = __importDefault(require("./database"));
 const swaggerDocument = __importStar(require("../config/swagger.json"));
 const logger_1 = __importDefault(require("../config/logger"));
 const index_1 = __importDefault(require("../config/index"));
@@ -47,7 +47,7 @@ class App {
         };
         this.httpServer = express_1.default();
         this.httpServer.use(express_1.default.json());
-        this.db = database_1.sequelize;
+        this.db = database_1.default;
         this.logger = new logger_1.default('app');
         new router_1.default(this.httpServer);
         this.httpServer.use(cors_1.default(index_1.default.corsOptions));

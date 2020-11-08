@@ -12,73 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserGroup = exports.Group = exports.User = exports.sequelize = void 0;
-const Sequelize = require('sequelize');
-const index_1 = __importDefault(require("../config/index"));
-const group_1 = require("../mockData/group");
+const mongoose_1 = __importDefault(require("mongoose"));
+const config_1 = __importDefault(require("../config"));
 const user_1 = require("../mockData/user");
-const UserModel = require('../models/user');
-const GroupModel = require('../models/group');
-const logger_1 = __importDefault(require("../config/logger"));
-const constants_1 = require("../util/constants");
-const logger = new logger_1.default('app');
-// postgres://{db_username}:{db_password}@{host}:{port}/{db_name}
-const sequelize = new Sequelize(index_1.default.databaseURL);
-exports.sequelize = sequelize;
-sequelize
-    .authenticate()
-    .then(() => {
-    logger.info('Connection has been established successfully.');
-})
-    .catch((err) => {
-    logger.error('Unable to connect to the database:');
-    console.error(err);
-});
-const UserGroup = sequelize.define('user_group', {});
-exports.UserGroup = UserGroup;
-const User = UserModel(sequelize, Sequelize);
-exports.User = User;
-const Group = GroupModel(sequelize, Sequelize);
-exports.Group = Group;
-User.belongsToMany(Group, { through: UserGroup, unique: false });
-Group.belongsToMany(User, { through: UserGroup, unique: false });
-sequelize.sync({ force: true }).then(() => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield sequelize.transaction((t) => __awaiter(void 0, void 0, void 0, function* () {
-            const groups = yield Group.bulkCreate(group_1.MOCK_GROUPS, { transaction: t });
-            return groups;
-        }));
-    }
-    catch (error) {
-        logger.error(constants_1.ERROR_MESSAGE);
-        console.error(error);
-    }
-    try {
-        yield sequelize
-            .transaction((t) => __awaiter(void 0, void 0, void 0, function* () {
-            const users = yield User.bulkCreate(user_1.MOCK_USERS, { transaction: t });
-            return users;
-        }))
-            .then(addUsersToGroup);
-    }
-    catch (error) {
-        logger.error(constants_1.ERROR_MESSAGE);
-        console.error(error);
-    }
-}));
-const addUsersToGroup = (users) => {
-    Group.findAll().then((groups) => {
-        groups.forEach((group) => {
-            group
-                .setUsers(users)
-                .then(() => {
-                console.log('Users added to Group successfully');
-            })
-                .catch((err) => {
-                logger.error(constants_1.ERROR_MESSAGE);
-                console.error(err);
-            });
-        });
+const user_2 = __importDefault(require("../models/user"));
+mongoose_1.default.connect(config_1.default.databaseURL, (err) => __awaiter(void 0, void 0, void 0, function* () {
+    if (err)
+        throw err;
+    yield user_1.MOCK_USERS.forEach((user) => {
+        user_2.default.create(user);
+    }, (error) => {
+        if (error) {
+            console.log(error);
+        }
     });
-};
+}));
+const db = mongoose_1.default.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Connection has been established successfully.");
+});
+exports.default = db;
 //# sourceMappingURL=database.js.map

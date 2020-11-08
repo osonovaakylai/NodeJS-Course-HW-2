@@ -7,7 +7,7 @@ const logger_1 = __importDefault(require("../config/logger"));
 const constants_1 = require("../util/constants");
 const logger = new logger_1.default("app");
 const errorHandler = (err, req, res) => {
-    logger.error(constants_1.ERROR_MESSAGE, { success: false });
+    logger.error(constants_1.ERROR_MESSAGE, { err });
     console.error(err.stack);
     res.status(500).json({ success: false, message: constants_1.ERROR_MESSAGE });
 };

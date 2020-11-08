@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.login = exports.checkAPI = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const database_1 = require("../loaders/database");
+const user_1 = __importDefault(require("../models/user"));
 const logger_1 = __importDefault(require("../config/logger"));
 const index_1 = __importDefault(require("../config/index"));
 const constants_1 = require("../util/constants");
@@ -32,25 +32,26 @@ exports.checkAPI = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 // login
 exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield database_1.User.findOne({ where: { login: req.body.login } });
+        const user = yield user_1.default.findOne({ login: req.body.login });
         if (user) {
-            if (req.body.password !== user.password) {
-                logger.error(constants_1.BAD_REQUEST_MESSAGE, { success: false });
-                return res.status(401).send({ auth: false, token: null });
-            }
+            // if (req.body.password !== user.password) {
+            //   logger.error(BAD_REQUEST_MESSAGE, { success: false });
+            //   return res.status(401).send({ auth: false, token: null });
+            // }
             const token = jsonwebtoken_1.default.sign({ id: user.id }, index_1.default.secret, {
                 expiresIn: 86400,
             });
             res.status(200).send({ auth: true, token });
-            logger.info(constants_1.SUCCESS_MESSAGE);
+            logger.info(constants_1.SUCCESS_MESSAGE, ({ auth: true, token }));
         }
         else {
             logger.error(constants_1.NOT_FOUND_MESSAGE, { success: false });
-            return res.status(404).send(constants_1.NOT_FOUND_MESSAGE);
+            return res.status(404).json({ error: { message: constants_1.NOT_FOUND_MESSAGE } });
         }
     }
-    catch (err) {
-        return next(err);
+    catch (error) {
+        logger.error(constants_1.ERROR_MESSAGE, { error });
+        return next(error);
     }
 });
 // logout

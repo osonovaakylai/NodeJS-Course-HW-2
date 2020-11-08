@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 
 import Router from '../api/router';
-import { sequelize } from './database';
+import db from './database';
 import * as swaggerDocument from '../config/swagger.json';
 import Logger from '../config/logger';
 import config from '../config/index';
@@ -16,12 +16,12 @@ class App {
   constructor() {
     this.httpServer = express();
     this.httpServer.use(express.json());
-    this.db = sequelize;
-    this.logger = new Logger('app')
+    this.db = db;
+    this.logger = new Logger('app');
 
     new Router(this.httpServer);
 
-    this.httpServer.use(cors(config.corsOptions))
+    this.httpServer.use(cors(config.corsOptions));
 
     this.httpServer.use(
       '/swagger',
@@ -32,14 +32,15 @@ class App {
 
   public Start = (port: number): Promise<any> => {
     return new Promise((resolve, reject) => {
-      this.httpServer.listen(port, () => {
+      this.httpServer
+        .listen(port, () => {
           resolve(port);
-          this.logger.info(`Application launched in PORT  ${port}`)
+          this.logger.info(`Application launched in PORT  ${port}`);
         })
         .on('error', (err: any) => {
-          this.logger.error('Something went wrong! ')
-          console.error(err)
-          reject(err)
+          this.logger.error('Something went wrong! ');
+          console.error(err);
+          reject(err);
         });
     });
   };

@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/setup.ts",
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --runInBand --detectOpenHandles",
     "start": "tsc && node dist/server.js",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"

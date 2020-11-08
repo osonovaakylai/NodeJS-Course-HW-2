@@ -1,12 +1,13 @@
 import * as express from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../loaders/database';
+import User from '../models/user';
 import Logger from '../config/logger';
 import config from '../config/index';
 import {
   SUCCESS_MESSAGE,
   NOT_FOUND_MESSAGE,
   BAD_REQUEST_MESSAGE,
+  ERROR_MESSAGE,
 } from '../util/constants';
 const logger = new Logger('app');
 
@@ -31,7 +32,7 @@ export const login = async (
   next: any
 ): Promise<any> => {
   try {
-    const user = await User.findOne({ where: { login: req.body.login } });
+    const user: any = await User.findOne({ login: req.body.login });
     if (user) {
       if (req.body.password !== user.password) {
         logger.error(BAD_REQUEST_MESSAGE, { success: false });
@@ -42,13 +43,14 @@ export const login = async (
       });
 
       res.status(200).send({ auth: true, token });
-      logger.info(SUCCESS_MESSAGE);
+      logger.info(SUCCESS_MESSAGE, ({ auth: true, token }));
     } else {
       logger.error(NOT_FOUND_MESSAGE, { success: false });
-      return res.status(404).send(NOT_FOUND_MESSAGE);
+      return res.status(404).json({ error: { message: NOT_FOUND_MESSAGE } });
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    logger.error(ERROR_MESSAGE, { error });
+    return next(error);
   }
 };
 
