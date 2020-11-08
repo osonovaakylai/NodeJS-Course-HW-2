@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../loaders/app';
+import app from '../loaders/app';
 
 const server = new app();
 
@@ -18,7 +18,7 @@ describe('/', () => {
       });
   });
 
-  it('should login login', async (done) => {
+  it('should login', async (done) => {
     const body = {
       login: 'user1',
       password: 'user1Pass',

@@ -104,7 +104,7 @@ exports.updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         });
         if (user) {
             logger.info(constants_1.SUCCESS_MESSAGE);
-            return res.status(404).json({
+            return res.status(200).json({
                 success: true,
                 message: 'Success',
                 data: user,

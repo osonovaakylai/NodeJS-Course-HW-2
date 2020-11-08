@@ -31,20 +31,20 @@ export const getGroupById = async (
   next: any
 ): Promise<any> => {
   try {
-    const group = await Group.findOne({ id: req.params.id });
+    const group = await Group.findById(req.params.id);
     if (group) {
-      res.json({
+      logger.info(SUCCESS_MESSAGE);
+      res.status(200).json({
         success: true,
         message: 'Success',
         data: group,
       });
-      logger.info(SUCCESS_MESSAGE);
     } else {
-      res.json({
+      logger.info(NOT_FOUND_MESSAGE);
+      res.status(404).json({
         success: false,
         message: NOT_FOUND_MESSAGE,
       });
-      logger.info(NOT_FOUND_MESSAGE);
     }
   } catch (err) {
     return next(err);
@@ -86,22 +86,19 @@ export const updateGroup = async (
     const group = await Group.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    let response: any;
     if (group) {
-      response = {
+      logger.info(SUCCESS_MESSAGE);
+      return res.status(200).json({
         success: true,
         message: 'Success',
         data: group,
-      };
-      logger.info(SUCCESS_MESSAGE);
-    } else {
-      response = {
-        success: false,
-        message: NOT_FOUND_MESSAGE,
-      };
-      logger.info(NOT_FOUND_MESSAGE);
+      });
     }
-    return res.json(response);
+    logger.info(NOT_FOUND_MESSAGE);
+    return res.status(404).json({
+      success: false,
+      message: NOT_FOUND_MESSAGE,
+    });
   } catch (err) {
     return next(err);
   }

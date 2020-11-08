@@ -31,19 +31,19 @@ exports.getGroupById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const group = yield group_1.default.findOne({ id: req.params.id });
         if (group) {
-            res.json({
+            logger.info(constants_1.SUCCESS_MESSAGE);
+            res.status(200).json({
                 success: true,
                 message: 'Success',
                 data: group,
             });
-            logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
-            res.json({
+            logger.info(constants_1.NOT_FOUND_MESSAGE);
+            res.status(404).json({
                 success: false,
                 message: constants_1.NOT_FOUND_MESSAGE,
             });
-            logger.info(constants_1.NOT_FOUND_MESSAGE);
         }
     }
     catch (err) {
@@ -78,23 +78,19 @@ exports.updateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const group = yield group_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
-        let response;
         if (group) {
-            response = {
+            logger.info(constants_1.SUCCESS_MESSAGE);
+            return res.status(200).json({
                 success: true,
                 message: 'Success',
                 data: group,
-            };
-            logger.info(constants_1.SUCCESS_MESSAGE);
+            });
         }
-        else {
-            response = {
-                success: false,
-                message: constants_1.NOT_FOUND_MESSAGE,
-            };
-            logger.info(constants_1.NOT_FOUND_MESSAGE);
-        }
-        return res.json(response);
+        logger.info(constants_1.NOT_FOUND_MESSAGE);
+        return res.status(404).json({
+            success: false,
+            message: constants_1.NOT_FOUND_MESSAGE,
+        });
     }
     catch (err) {
         return next(err);

@@ -1,1 +1,1 @@
-{"version":3,"file":"group.js","sourceRoot":"","sources":["../../src/mockData/group.ts"],"names":[],"mappings":";;;AAAa,QAAA,WAAW,GAAG;IACzB;QACE,EAAE,EAAE,sCAAsC;QAC1C,IAAI,EAAE,QAAQ;QACd,WAAW,EAAE,MAAM;KACpB;CACF,CAAC"}
+{"version":3,"file":"group.js","sourceRoot":"","sources":["../../src/mockData/group.ts"],"names":[],"mappings":";;;AAAa,QAAA,WAAW,GAAG;IACzB;QACE,IAAI,EAAE,QAAQ;QACd,WAAW,EAAE,CAAC,MAAM,CAAC;KACtB;CACF,CAAC"}
