@@ -1,5 +1,4 @@
 import * as express from 'express';
-import { v4 as uuid } from 'uuid';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IUserRequestSchema } from '../interfaces/user';
 import User from '../models/user';
@@ -69,7 +68,7 @@ export const getUserById = async (
       });
       logger.info(SUCCESS_MESSAGE);
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: NOT_FOUND_MESSAGE,
       });
@@ -91,8 +90,7 @@ export const createUser = async (
       res.json({ message: ALREADY_EXIST, data: checkdata });
       logger.info(ALREADY_EXIST);
     } else {
-      const newUUID = uuid();
-      const newUser = await User.create({ id: newUUID, ...req.body });
+      const newUser = await User.create(req.body);
       if (newUser) {
         res.json({
           success: true,
@@ -116,22 +114,19 @@ export const updateUser = async (
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    let response: any;
     if (user) {
-      response = {
+      logger.info(SUCCESS_MESSAGE);
+      return res.status(200).json({
         success: true,
         message: 'Success',
         data: user,
-      };
-      logger.info(SUCCESS_MESSAGE);
-    } else {
-      response = {
-        success: false,
-        message: NOT_FOUND_MESSAGE,
-      };
-      logger.info(NOT_FOUND_MESSAGE);
+      });
     }
-    return res.json(response);
+    logger.info(NOT_FOUND_MESSAGE);
+    return res.status(404).json({
+      success: false,
+      message: NOT_FOUND_MESSAGE,
+    });
   } catch (err) {
     return next(err);
   }

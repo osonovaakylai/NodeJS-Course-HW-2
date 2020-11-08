@@ -1,23 +1,16 @@
-// module.exports = (sequelize, type) => {
-//   return sequelize.define(
-//     'group',
-//     {
-//       id: {
-//         type: type.UUID,
-//         primaryKey: true,
-//       },
-//       name: {
-//         type: type.STRING,
-//       },
-//       permissions: {
-//         type: type.STRING,
-//         enum: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'],
-//       },
-//     },
-//     {
-//       timestamps: false,
-//       freezeTableName: true,
-//     }
-//   );
-// };
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const Schema = mongoose_1.default.Schema;
+const GroupSchema = new Schema({
+    id: String,
+    name: String,
+    permissions: Array,
+});
+mongoose_1.default.model('Group', GroupSchema);
+const Group = mongoose_1.default.model('Group');
+exports.default = Group;
 //# sourceMappingURL=group.js.map

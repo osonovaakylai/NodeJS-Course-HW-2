@@ -8,48 +8,60 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-jest.setTimeout(30000);
-describe("Auth controller", () => {
-    let mRes;
-    let mNext;
-    beforeEach(() => {
-        mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-        mNext = jest.fn();
-    });
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
-    // it("should call next when error happens", async () => {
-    //   const mReq = {} as any;
-    //   await login(mReq, mRes, mNext);
-    //   expect(mNext).toBeCalledWith(expect.any(Error));
-    // });
-    // it("should return error message if user with such login not found", async () => {
-    //   const mReq = {
-    //     body: {
-    //       login: "test",
-    //     },
-    //   } as any;
-    //   await login(mReq, mRes, mNext);
-    //   expect(mRes.status).toBeCalledWith(404);
-    //   expect(mRes.status().json).toBeCalledWith({
-    //     error: { message: "Not found!" },
-    //   });
-    // });
-    it("should return successfull response", () => __awaiter(void 0, void 0, void 0, function* () {
-        expect(true).toBeTruthy();
-        // const mReq = {
-        //   body: {
-        //     login: 'user1',
-        //     password: 'user1Pass',
-        //   },
-        // } as any;
-        // await login(mReq, mRes, mNext);
-        // expect(mRes.status).toBeCalledWith(200);
-        // expect(mRes.status().json).toBeCalledWith({
-        //   auth: true,
-        // });
+const supertest_1 = __importDefault(require("supertest"));
+const app_1 = __importDefault(require("../../loaders/app"));
+const server = new app_1.default();
+describe('/', () => {
+    it('should check API', (done) => __awaiter(void 0, void 0, void 0, function* () {
+        supertest_1.default(server.httpServer)
+            .post('/')
+            .send()
+            .expect(200)
+            .expect((res) => {
+            res.body = 'API works';
+        })
+            .end((err) => {
+            if (err)
+                return done(err);
+            done();
+        });
+    }));
+    it('check login', (done) => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            login: 'user1',
+            password: 'user1Pass',
+        };
+        supertest_1.default(server.httpServer)
+            .post('/login')
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+            res.body.auth = true;
+        })
+            .end((err) => {
+            if (err)
+                return done(err);
+            done();
+        });
+    }));
+    it('check logout', (done) => __awaiter(void 0, void 0, void 0, function* () {
+        supertest_1.default(server.httpServer)
+            .get('/logout')
+            .send()
+            .expect(200)
+            .expect((res) => {
+            res.body.auth = false;
+            res.body.token = null;
+        })
+            .end((err) => {
+            if (err)
+                return done(err);
+            done();
+        });
     }));
 });
 //# sourceMappingURL=auth.test.js.map

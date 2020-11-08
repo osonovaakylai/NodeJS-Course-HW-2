@@ -33,12 +33,12 @@ exports.getUsersByParams = (req, res, next) => __awaiter(void 0, void 0, void 0,
     try {
         if (req.query && limit && loginSubstring) {
             const filteredUsers = yield user_1.default.find({
-                login: { $regex: loginSubstring }
+                login: { $regex: loginSubstring },
             }).limit(Number(limit));
             res.json({
                 success: true,
                 message: 'Success',
-                data: filteredUsers || []
+                data: filteredUsers || [],
             });
             logger.info(constants_1.SUCCESS_MESSAGE);
         }
@@ -58,14 +58,14 @@ exports.getUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             res.json({
                 success: true,
                 message: 'Success',
-                data: user
+                data: user,
             });
             logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
-            res.json({
+            res.status(404).json({
                 success: false,
-                message: constants_1.NOT_FOUND_MESSAGE
+                message: constants_1.NOT_FOUND_MESSAGE,
             });
             logger.info(constants_1.NOT_FOUND_MESSAGE);
         }
@@ -87,7 +87,7 @@ exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 res.json({
                     success: true,
                     message: 'Success',
-                    data: newUser
+                    data: newUser,
                 });
                 logger.info(constants_1.SUCCESS_MESSAGE);
             }
@@ -99,25 +99,22 @@ exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        let response;
+        const user = yield user_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
         if (user) {
-            // await user.update(req.body);
-            response = {
+            logger.info(constants_1.SUCCESS_MESSAGE);
+            return res.status(404).json({
                 success: true,
                 message: 'Success',
-                data: user
-            };
-            logger.info(constants_1.SUCCESS_MESSAGE);
+                data: user,
+            });
         }
-        else {
-            response = {
-                success: false,
-                message: constants_1.NOT_FOUND_MESSAGE
-            };
-            logger.info(constants_1.NOT_FOUND_MESSAGE);
-        }
-        return res.json(response);
+        logger.info(constants_1.NOT_FOUND_MESSAGE);
+        return res.status(404).json({
+            success: false,
+            message: constants_1.NOT_FOUND_MESSAGE,
+        });
     }
     catch (err) {
         return next(err);
@@ -131,14 +128,14 @@ exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             response = {
                 success: true,
                 message: 'Success',
-                data: user
+                data: user,
             };
             logger.info(constants_1.SUCCESS_MESSAGE);
         }
         else {
             response = {
                 success: false,
-                message: constants_1.NOT_FOUND_MESSAGE
+                message: constants_1.NOT_FOUND_MESSAGE,
             };
             logger.info(constants_1.NOT_FOUND_MESSAGE);
         }

@@ -34,10 +34,10 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const user = yield user_1.default.findOne({ login: req.body.login });
         if (user) {
-            // if (req.body.password !== user.password) {
-            //   logger.error(BAD_REQUEST_MESSAGE, { success: false });
-            //   return res.status(401).send({ auth: false, token: null });
-            // }
+            if (req.body.password !== user.password) {
+                logger.error(constants_1.BAD_REQUEST_MESSAGE, { success: false });
+                return res.status(401).send({ auth: false, token: null });
+            }
             const token = jsonwebtoken_1.default.sign({ id: user.id }, index_1.default.secret, {
                 expiresIn: 86400,
             });

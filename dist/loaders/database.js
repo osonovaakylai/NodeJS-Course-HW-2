@@ -28,9 +28,9 @@ mongoose_1.default.connect(config_1.default.databaseURL, (err) => __awaiter(void
     });
 }));
 const db = mongoose_1.default.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Connection has been established successfully.");
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('Connection has been established successfully.');
 });
 exports.default = db;
 //# sourceMappingURL=database.js.map

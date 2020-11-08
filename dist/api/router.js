@@ -26,9 +26,9 @@ const express = __importStar(require("express"));
 const user_validator_1 = require("../validators/user-validator");
 const user_1 = require("../services/user");
 const auth_1 = require("../services/auth");
-// import { createGroup, deleteGroup, getAllGroups, getGroupById, updateGroup } from '../services/group';
-// import { groupSchema } from '../validators/group-validator';
-// import { getGroupsByUserId, getUsersByGroupId } from '../services/user-group';
+const group_1 = require("../services/group");
+const group_validator_1 = require("../validators/group-validator");
+const user_group_1 = require("../services/user-group");
 const error_handler_1 = __importDefault(require("../middlewares/error-handler"));
 const check_token_1 = __importDefault(require("../middlewares/check-token"));
 class Router {
@@ -43,13 +43,13 @@ class Router {
         router.get('/user/:id', check_token_1.default, user_1.getUserById);
         router.put('/user/:id', check_token_1.default, user_validator_1.validator.body(user_validator_1.bodySchema), user_1.updateUser);
         router.delete('/user/:id', check_token_1.default, user_1.deleteUser);
-        // router.get('/group', checkToken, getAllGroups);
-        // router.post('/group', checkToken, validator.body(groupSchema), createGroup);
-        // router.get('/group/:id', checkToken, getGroupById);
-        // router.put('/group/:id', checkToken, validator.body(groupSchema), updateGroup);
-        // router.delete('/group/:id', checkToken, deleteGroup);
-        // router.get('/groups/:userId/user', checkToken, getGroupsByUserId);
-        // router.get('/users/:groupId/group', checkToken, getUsersByGroupId);
+        router.get('/group', check_token_1.default, group_1.getAllGroups);
+        router.post('/group', check_token_1.default, user_validator_1.validator.body(group_validator_1.groupSchema), group_1.createGroup);
+        router.get('/group/:id', check_token_1.default, group_1.getGroupById);
+        router.put('/group/:id', check_token_1.default, user_validator_1.validator.body(group_validator_1.groupSchema), group_1.updateGroup);
+        router.delete('/group/:id', check_token_1.default, group_1.deleteGroup);
+        router.get('/groups/:userId/user', check_token_1.default, user_group_1.getGroupsByUserId);
+        router.get('/users/:groupId/group', check_token_1.default, user_group_1.getUsersByGroupId);
         server.use('/', router);
         server.use(error_handler_1.default);
     }

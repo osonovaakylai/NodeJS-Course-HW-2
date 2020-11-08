@@ -34,7 +34,8 @@ class App {
     constructor() {
         this.Start = (port) => {
             return new Promise((resolve, reject) => {
-                this.httpServer.listen(port, () => {
+                this.httpServer
+                    .listen(port, () => {
                     resolve(port);
                     this.logger.info(`Application launched in PORT  ${port}`);
                 })

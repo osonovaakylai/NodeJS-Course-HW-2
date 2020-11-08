@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import * as express from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IGroupRequestSchema } from '../interfaces/user';
@@ -63,8 +62,7 @@ export const createGroup = async (
       res.json({ message: 'Group already exist', data: checkdata });
       logger.info(ALREADY_EXIST);
     } else {
-      const newUUID = uuid();
-      const newGroup = await Group.create({ id: newUUID, ...req.body });
+      const newGroup = await Group.create(req.body);
       if (newGroup) {
         res.json({
           success: true,

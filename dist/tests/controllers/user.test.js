@@ -1,31 +1,22 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const user_1 = require("./../../mockData/user");
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../../loaders/app"));
-const { MongoClient } = require("mongodb");
 const server = new app_1.default();
-jest.setTimeout(30000);
-describe("Login", () => {
+describe('User controller', () => {
     let token;
+    let createdUsers = [];
     beforeAll((done) => {
         const body = {
-            login: "user1",
-            password: "user1Pass",
+            login: 'user1',
+            password: 'user1Pass',
         };
         supertest_1.default(server.httpServer)
-            .post("/login")
+            .post('/login')
             .send(body)
             .expect(200)
             .expect((res) => {
@@ -35,58 +26,85 @@ describe("Login", () => {
             if (err)
                 return done(err);
             token = res.body.token;
-            console.log(res);
             done();
         });
     });
-    it("should get all users", (done) => {
+    it('should get all users', (done) => {
         supertest_1.default(server.httpServer)
-            .get("/users")
+            .get('/users')
             .set('x-access-token', token)
             .expect(200)
-            .expect((res) => {
-            const result = res;
-        })
             .end((err, res) => {
+            if (err)
+                return done(err);
+            createdUsers = res.body.data;
+            console.log(createdUsers);
+            done();
+        });
+    });
+    it('should get all users by params', (done) => {
+        supertest_1.default(server.httpServer)
+            .get('/users')
+            .set('x-access-token', token)
+            .query({ loginSubstring: 'er', limit: 3 })
+            .expect(200)
+            .end((err) => {
             if (err)
                 return done(err);
             done();
         });
     });
-    it("check login", (done) => __awaiter(void 0, void 0, void 0, function* () {
-        const body = {
-            login: "user1",
-            password: "user1Pass",
+    it('should not get user by id', (done) => {
+        supertest_1.default(server.httpServer)
+            .get('/user/123')
+            .set('x-access-token', token)
+            .expect(500)
+            .end((err) => {
+            if (err)
+                return done(err);
+            done();
+        });
+    });
+    it('should create user', (done) => {
+        const newUser = {
+            login: 'user3',
+            password: 'user3Pass',
+            age: 18,
+            isDeleted: false,
         };
         supertest_1.default(server.httpServer)
-            .post("/login")
-            .send(body)
+            .post('/user')
+            .set('x-access-token', token)
+            .send(newUser)
             .expect(200)
-            .expect((res) => {
-            res.body.auth = true;
-        })
-            .end((err, res) => {
+            .end((err) => {
             if (err)
                 return done(err);
-            debugger;
             done();
         });
-    }));
-});
-describe("/", () => {
-    it("should check API", (done) => __awaiter(void 0, void 0, void 0, function* () {
+    });
+    it('should not update user', (done) => {
         supertest_1.default(server.httpServer)
-            .post("/")
-            .send()
-            .expect(200)
-            .expect((res) => {
-            res.body = "API works";
-        })
-            .end((err, res) => {
+            .put('/user/123')
+            .set('x-access-token', token)
+            .send(user_1.MOCK_USERS[0])
+            .expect(500)
+            .end((err) => {
             if (err)
                 return done(err);
             done();
         });
-    }));
+    });
+    it('should not delete user', (done) => {
+        supertest_1.default(server.httpServer)
+            .delete('/user/123')
+            .set('x-access-token', token)
+            .expect(500)
+            .end((err) => {
+            if (err)
+                return done(err);
+            done();
+        });
+    });
 });
 //# sourceMappingURL=user.test.js.map

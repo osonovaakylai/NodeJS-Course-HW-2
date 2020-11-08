@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     age: Number,
     isDeleted: Boolean,
 });
-mongoose_1.default.model("User", UserSchema);
-const User = mongoose_1.default.model("User");
+mongoose_1.default.model('User', UserSchema);
+const User = mongoose_1.default.model('User');
 exports.default = User;
 //# sourceMappingURL=user.js.map
